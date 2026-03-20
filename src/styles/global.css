@@ -9,7 +9,7 @@
   --fg:           #1c1a18;
   --fg-strong:    #111110;
   --fg-muted:     #4a4845;
-  --fg-faint:     #b8b5b0;
+  --fg-faint:     #6e6560;
   --border:       #e4e0da;
   --border-link:  #ccc8c2;
 }
@@ -49,7 +49,7 @@ h1 {
 
 h2 {
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--fg-faint);
