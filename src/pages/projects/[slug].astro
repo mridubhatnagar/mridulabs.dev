@@ -1,0 +1,298 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Mermaid from "../../components/Mermaid.astro";
+
+export function getStaticPaths() {
+  const projects = [
+    {
+      slug: "project-one",
+      title: "Project One",
+      description: "One-line summary of what it does and who it's for.",
+      role: "Design, Frontend",
+      year: "2024",
+      live: "https://example.com",
+      what: "2–3 sentences on what the product is. Keep it factual.",
+      problem: "The specific problem it solves. One or two sentences max.",
+      approach: [
+        "Decided on X because Y.",
+        "Built Z to handle the edge case of W.",
+        "Iterated on the onboarding flow after early user feedback.",
+      ],
+      outcome: "What shipped, what changed, what was learned.",
+      interesting: [],
+      next: [],
+      diagrams: [],
+    },
+    {
+      slug: "prepit",
+      title: "Prepit",
+      description: "An AI study partner for revising fundamentals — built end to end.",
+      role: "Backend, AI",
+      year: "2024",
+      live: "https://prepit.mridulabs.dev",
+      github: "https://github.com/mridubhatnagar/prepwise",
+      what: "Prepit is an AI study partner built on top of my own study notes — system design, DSA, AI basics. The idea was simple: instead of navigating through markdown docs manually, just ask a question. It answers, lists sources and citations, and suggests follow-up questions. Users can rate each response. Since the LLM API is paid, there's a configurable context window — users clear it to continue. Access is invite-only.",
+      problem: "I was studying system design, DSA, and AI and logging everything in markdown files. The notes were useful but hard to navigate quickly. I wanted to build a chat interface on top of them — not use a framework like LangChain, so I could actually understand how RAG works at the core.",
+      approach: [
+        "Started with a PRD — listed what I wanted to build, decided the knowledge base would be my own study notes. Then wrote a technical design doc: models, DAOs, folder structure, coding style, API contracts. Created a detailed todo list, went through several revisions, then handed it to a Claude agent team — four agents covering database, frontend, backend, and integration.",
+        "Auth first. Google OAuth, everything server-side — state generation, CSRF protection, token verification. JWT in an HttpOnly cookie, sessions expire after 1 hour.",
+        "Added an invite-only allowlist on top of auth. Authenticated users not on the list can't reach the chat interface. All endpoints protected.",
+        "Chunking with langchain-text-splitters — custom logic got complex fast, MarkdownSplitter did the job. Reformatted the docs to work with it.",
+        "Chose Weaviate for vector storage. Passed chunks through the embedding model before Weaviate instead of letting Weaviate call it internally — wanted visibility into embedding costs.",
+        "Tested the chat flow end to end with curl and Swagger before integrating with the frontend. Kept this for last so retrieval bugs didn't block everything else.",
+        "Deployed on AWS EC2 with Docker Compose — same setup as local. docker-compose.override.yml per environment so production config is never edited directly.",
+        "Set up GitHub Actions for auto-deployment to EC2 and auto-generated release notes on every production deploy — no manual SSH, saves time, and gives a traceable history of what shipped.",
+      ],
+      interesting: [
+        {
+          title: "Building auth end to end for the first time",
+          body: "This was my first time owning auth completely. Google OAuth sounds straightforward until you start thinking through what can go wrong. CSRF via the state parameter, XSS via HttpOnly cookies, PII kept out of the JWT. Then auth alone wasn't enough — an authenticated user who isn't on the invite list shouldn't reach the chat interface at all. All APIs and /docs are authorized based on scope — a free textarea with no backend auth would have been easy to misuse. And even with that, data isolation was a separate problem: one user's chat history should never be accessible to another. Each of these felt like a small decision at the time but added up to a layered security model.",
+        },
+        {
+          title: "Batch ingestion silently broke semantic search",
+          body: "Batch ingestion wasn't indexing documents via HNSW. Semantic search fell back to keyword search without any error. The 'out of scope' feature stopped working — the LLM was answering everything regardless of whether the topic was in the knowledge base. Only caught it by running hybrid search experiments directly in the shell. Fixed by switching to one API call per chunk.",
+        },
+        {
+          title: "Context window management — deleting messages was the wrong call",
+          body: "Each request sends the full chat history to the LLM — the more messages, the more tokens, the more cost. Early implementation deleted messages from the DB once the token limit was hit. That felt wrong — message data is valuable. Enough of it could be used to build a custom evaluation dataset. Before launch, switched to session IDs instead. All messages in a session share a session_id. When the token limit is hit, a new session ID is generated — no messages are deleted, ever. Right now users clear the chat with a button — that generates a new session ID and the conversation starts fresh. But the data stays, and the door is open for rate limiting or cooldown periods later.",
+        },
+        {
+          title: "Hybrid search and confidence scoring needed different strategies",
+          body: "Retrieval uses hybrid search — if a user types a single keyword that matches a doc, it should return a result. But confidence scoring can't use the hybrid score, because a keyword match doesn't tell you if the content is semantically relevant. Used near_vector separately for confidence — Weaviate returns a distance score, and anything above a threshold gets rejected as out of scope.",
+        },
+      ],
+      outcome: "Shared with 5 people, 2 used it. Feedback was mostly on the UI — the left sidebar looks clickable and highlights on hover, which made users expect the documents to open. They don't. That's the clearest thing to fix next.",
+      next: [
+        "Integrate Sentry for log monitoring — currently logs are lost on every container restart.",
+        "Fix the left sidebar UX — it highlights on hover which gives the impression documents can be opened, but viewing documents is not a feature by design. The hover state needs to be removed.",
+      ],
+      diagrams: [
+        {
+          title: "Auth Flow",
+          code: `sequenceDiagram
+    actor User
+    participant Backend
+    participant Google
+    participant DB
+
+    User->>Backend: GET /api/auth/initiate
+    Backend->>Backend: Generate state nonce
+    Backend->>User: Set oauth_state cookie
+    Backend->>Google: Redirect with state param
+    Google->>Backend: Callback with code + state
+    Backend->>Backend: Verify state, clear cookie
+    Backend->>Google: Exchange code for user info
+    Backend->>DB: Check email against allowlist
+    alt Email allowed
+        Backend->>User: Set JWT cookie, redirect to chat
+    else Not on allowlist
+        Backend->>User: 403 Forbidden
+    end`,
+        },
+        {
+          title: "RAG Pipeline",
+          code: `sequenceDiagram
+    actor User
+    participant Backend
+    participant OpenAI
+    participant Weaviate
+
+    User->>Backend: POST /api/chat {message, session_id}
+    Backend->>OpenAI: Generate query embedding
+    OpenAI->>Backend: Query vector
+    Backend->>Weaviate: Hybrid search (vector + keyword)
+    Weaviate->>Backend: Chunks + distance scores
+    alt Distance within threshold
+        Backend->>OpenAI: Prompt + context + chat history
+        OpenAI->>Backend: Answer + follow-up questions
+        Backend->>User: Response with sources + citations
+    else Distance exceeds threshold
+        Backend->>User: Out of scope
+    end`,
+        },
+      ],
+    },
+    {
+      slug: "project-two",
+      title: "Project Two",
+      description: "One-line summary of what it does and who it's for.",
+      role: "Design, Frontend",
+      year: "2023",
+      live: "https://example.com",
+      what: "2–3 sentences on what the product is. Keep it factual.",
+      problem: "The specific problem it solves. One or two sentences max.",
+      approach: [
+        "Decided on X because Y.",
+        "Built Z to handle the edge case of W.",
+        "Iterated on the onboarding flow after early user feedback.",
+      ],
+      outcome: "What shipped, what changed, what was learned.",
+      interesting: [],
+      next: [],
+      diagrams: [],
+    },
+  ];
+  return projects.map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
+}
+
+const { project } = Astro.props;
+---
+
+<BaseLayout title={project.title}>
+  <article>
+    <header>
+      <div class="title-row">
+        <h1>{project.title}</h1>
+        <span class="year">{project.year}</span>
+      </div>
+      <p class="summary">{project.description}</p>
+      <div class="meta">
+        <span>{project.role}</span>
+        {project.live && <a href={project.live} target="_blank" rel="noopener noreferrer">Live ↗</a>}
+        {project.github && <a href={project.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>}
+      </div>
+    </header>
+
+    <section>
+      <h2>What</h2>
+      <p>{project.what}</p>
+    </section>
+
+    <section>
+      <h2>Problem</h2>
+      <p>{project.problem}</p>
+    </section>
+
+    <section>
+      <h2>Approach</h2>
+      <ul>
+        {project.approach.map((item) => <li>{item}</li>)}
+      </ul>
+    </section>
+
+    {project.diagrams?.length > 0 && (
+      <section>
+        <h2>Architecture</h2>
+        <div class="diagrams">
+          {project.diagrams.map((d) => (
+            <Mermaid code={d.code} title={d.title} />
+          ))}
+        </div>
+      </section>
+    )}
+
+    {project.interesting?.length > 0 && (
+      <section>
+        <h2>Interesting Problems</h2>
+        <div class="problems">
+          {project.interesting.map((item) => (
+            <div class="problem">
+              <span class="problem-title">{item.title}</span>
+              <p>{item.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <section>
+      <h2>Outcome</h2>
+      <p>{project.outcome}</p>
+    </section>
+
+    {project.next?.length > 0 && (
+      <section>
+        <h2>What's Next</h2>
+        <ul>
+          {project.next.map((item) => <li>{item}</li>)}
+        </ul>
+      </section>
+    )}
+  </article>
+  {project.diagrams?.length > 0 && (
+    <script>
+      import mermaid from "mermaid";
+      mermaid.initialize({ startOnLoad: true, theme: "neutral" });
+    </script>
+  )}
+</BaseLayout>
+
+<style>
+  article {
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+  }
+
+  header {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .year {
+    font-size: 12px;
+    color: var(--fg-faint);
+  }
+
+  .summary {
+    color: var(--fg-muted);
+    margin: 0;
+  }
+
+  .meta {
+    display: flex;
+    gap: 20px;
+    font-size: 13px;
+    color: var(--fg-muted);
+    margin-top: 2px;
+  }
+
+  section {
+    display: flex;
+    flex-direction: column;
+  }
+
+  ul {
+    padding-left: 1.1rem;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    color: var(--fg);
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .problems {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+
+  .problem {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .problem-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--fg-strong);
+  }
+
+  .diagrams {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+</style>

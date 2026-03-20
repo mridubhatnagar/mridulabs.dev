@@ -1,0 +1,65 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Now — Mridu">
+  <article>
+
+    <section class="intro">
+      <h1>Now</h1>
+      <p class="updated">Updated March 2026</p>
+    </section>
+
+    <section>
+      <h2>Building</h2>
+      <p>Focused on building products end to end. Currently working on Prepit — an AI study partner for interview prep. Thinking about what to build next.</p>
+    </section>
+
+    <section>
+      <h2>Learning</h2>
+      <p>Learned AWS EC2 hands-on while deploying Prepit.</p>
+      <p>Courses completed in 2026:</p>
+      <ul>
+        <li><a href="https://learn.kodekloud.com/certificate/499eae58-d864-4cae-ac8c-4057f91d1af6" target="_blank" rel="noopener noreferrer">Introduction to Docker for Absolute Beginners — KodeKloud ↗</a></li>
+        <li><a href="https://learn.deeplearning.ai/certificates/5d0996e3-4a19-4ce6-a23e-04ff776e1fee" target="_blank" rel="noopener noreferrer">Retrieval Augmented Generation — DeepLearning.AI ↗</a></li>
+        <li><a href="https://learn.deeplearning.ai/accomplishments/6e080994-da0b-4efa-af34-8af9b4476f22" target="_blank" rel="noopener noreferrer">Building Systems with the ChatGPT API — DeepLearning.AI ↗</a></li>
+        <li><a href="https://learn.deeplearning.ai/accomplishments/380ceeb4-cb3f-44f1-b518-8d1f86af9148?usp=sharing" target="_blank" rel="noopener noreferrer">How Transformer LLMs Work — DeepLearning.AI ↗</a></li>
+        <li><a href="https://learn.deeplearning.ai/accomplishments/59075fa0-945a-40ef-92f3-73a49db41b67" target="_blank" rel="noopener noreferrer">ChatGPT Prompt Engineering — DeepLearning.AI ↗</a></li>
+        <li><a href="https://learn.deeplearning.ai/accomplishments/5cded286-e670-4c15-afd5-033af92e42aa?usp=sharing" target="_blank" rel="noopener noreferrer">Vector Databases: From Embeddings to Applications — DeepLearning.AI ↗</a></li>
+        <li><a href="https://verify.skilljar.com/c/g3kkj8wnp7tm" target="_blank" rel="noopener noreferrer">Claude Code in Action — Anthropic ↗</a></li>
+        <li><a href="https://anthropic.skilljar.com/introduction-to-agent-skills" target="_blank" rel="noopener noreferrer">Introduction to Agent Skills — Anthropic ↗</a></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Reading</h2>
+      <p>The Design of Everyday Things — Don Norman</p>
+    </section>
+
+  </article>
+</BaseLayout>
+
+<style>
+  article {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+
+  .intro h1 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 6px;
+    letter-spacing: -0.02em;
+  }
+
+  .updated {
+    font-size: 12px;
+    color: var(--fg-faint);
+    margin: 0;
+  }
+
+  p, li {
+    color: var(--fg-muted);
+  }
+</style>

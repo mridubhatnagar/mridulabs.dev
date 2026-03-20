@@ -1,0 +1,245 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Resume — Mridu">
+  <article>
+
+    <section class="intro">
+      <h1>Mridu Bhatnagar</h1>
+      <p>Backend engineer with 7+ years of experience. I care about product and systems thinking. AI has helped me look at projects as a whole — not just the code. Interested in working at the intersection of product, engineering, and AI.</p>
+      <div class="socials">
+        <a href="mailto:mridubhatnagar4@gmail.com">Email ↗</a>
+        <a href="https://www.linkedin.com/in/mridu-bhatnagar-17703a92/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+        <a href="https://github.com/mridubhatnagar" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      </div>
+    </section>
+
+    <section>
+      <h2>Experience</h2>
+
+      <div class="entry">
+        <div class="entry-header">
+          <span class="role">Senior Software Engineer · IIT Madras</span>
+          <span class="meta">Jul 2024 – Present</span>
+        </div>
+        <ul>
+          <li>Developed a bulk student-marks upsert feature that removed repetitive manual uploads and streamlined workflows for the academic team.</li>
+          <li>Built an exam city preference management module with validation, payment handling, and user flow improvements.</li>
+          <li>Delivered backend and frontend (JavaScript) implementation across multiple platform enhancements.</li>
+          <li>Resolved production bugs and kept the platform running smoothly for day-to-day academic operations.</li>
+        </ul>
+      </div>
+
+      <div class="entry">
+        <div class="entry-header">
+          <span class="role">Senior Software Engineer · Peppo Technologies</span>
+          <span class="meta">Aug 2021 – Apr 2024</span>
+        </div>
+        <ul>
+          <li>Owned end-to-end development and maintenance of the settlement service, including new features and documentation.</li>
+          <li>Built the settlement service for the Deals product from scratch — rolled out to 8,000+ customers.</li>
+          <li>Integrated Razorpay Route APIs for accurate and timely merchant settlements in production.</li>
+          <li>Automated GST reporting and monthly invoice generation, reducing manual effort by 50%.</li>
+          <li>Mentored a junior engineer and collaborated with Razorpay's technical team to resolve API issues.</li>
+        </ul>
+      </div>
+
+      <div class="entry">
+        <div class="entry-header">
+          <span class="role">Independent Consultant</span>
+          <span class="meta">Jan 2020 – Jul 2021</span>
+        </div>
+        <ul>
+          <li>Created Python-focused technical content — courses, short-form lessons, API projects, blogs, and conference talks.</li>
+          <li>Worked with LinkedIn Learning, Twilio, egghead.io, Team4Adventure, and international Python conferences.</li>
+        </ul>
+      </div>
+
+      <div class="entry">
+        <div class="entry-header">
+          <span class="role">Software Engineer · Goibibo</span>
+          <span class="meta">2018 – 2020</span>
+        </div>
+        <ul>
+          <li>Built and maintained internal and external API integrations for partners including Criteo and WebEngage.</li>
+          <li>Automated data pipelines to generate daily reports, reducing manual effort.</li>
+        </ul>
+      </div>
+
+      <div class="entry">
+        <div class="entry-header">
+          <span class="role">Data Engineer · Finnovation Services</span>
+          <span class="meta">Dec 2017 – Aug 2018</span>
+        </div>
+        <ul>
+          <li>Designed and implemented APIs and core business logic for the product's rule engine.</li>
+          <li>Integrated multiple external fintech partner APIs for data exchange across workflows.</li>
+        </ul>
+      </div>
+
+      <div class="entry">
+        <div class="entry-header">
+          <span class="role">Software Engineer · Reckonsys Tech Labs</span>
+          <span class="meta">Aug 2017 – Dec 2017</span>
+        </div>
+        <ul>
+          <li>Built backend features for Kredily using Django REST Framework.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>Education</h2>
+      <div class="entry">
+        <div class="entry-header">
+          <span class="role">B.Tech, Computer Science · NIIT University</span>
+          <span class="meta">2013 – 2017</span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Skills</h2>
+      <dl class="skills">
+        <div>
+          <dt>Languages</dt>
+          <dd>Python, JavaScript</dd>
+        </div>
+        <div>
+          <dt>Frameworks</dt>
+          <dd>Flask</dd>
+        </div>
+        <div>
+          <dt>Databases</dt>
+          <dd>PostgreSQL, Redis, MongoDB, SQLite, Weaviate, Google Datastore</dd>
+        </div>
+        <div>
+          <dt>Infrastructure</dt>
+          <dd>Docker, AWS (EC2, S3, CloudWatch, IAM), Google Cloud (Bucket, Pub/Sub, Log Explorer)</dd>
+        </div>
+        <div>
+          <dt>APIs</dt>
+          <dd>REST, gRPC</dd>
+        </div>
+        <div>
+          <dt>AI Tools</dt>
+          <dd>Claude Code</dd>
+        </div>
+        <div>
+          <dt>Tools</dt>
+          <dd>Git, Linux, Celery, Sentry</dd>
+        </div>
+        <div>
+          <dt>AI / LLMs</dt>
+          <dd>RAG pipelines, vector search, embeddings, OpenAI API</dd>
+        </div>
+        <div>
+          <dt>Frontend</dt>
+          <dd>HTML, CSS</dd>
+        </div>
+      </dl>
+    </section>
+
+  </article>
+</BaseLayout>
+
+<style>
+  article {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+
+  .intro h1 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 6px;
+    letter-spacing: -0.02em;
+  }
+
+  .intro p {
+    color: var(--fg-muted);
+    margin: 0 0 10px;
+  }
+
+  .socials {
+    display: flex;
+    gap: 16px;
+    font-size: 13px;
+  }
+
+  h2 {
+    margin-bottom: 24px;
+  }
+
+  .entry {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+
+  .entry:last-child {
+    margin-bottom: 0;
+  }
+
+  .entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .role {
+    font-weight: 500;
+    color: var(--fg-strong);
+    font-size: 14px;
+  }
+
+  .meta {
+    font-size: 12px;
+    color: var(--fg-faint);
+    white-space: nowrap;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  li {
+    font-size: 14px;
+    color: var(--fg-muted);
+    line-height: 1.6;
+  }
+
+  .skills {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+  }
+
+  .skills div {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 12px;
+    align-items: baseline;
+  }
+
+  .skills dt {
+    font-size: 12px;
+    color: var(--fg-faint);
+    padding-top: 1px;
+  }
+
+  .skills dd {
+    margin: 0;
+    font-size: 14px;
+    color: var(--fg-muted);
+  }
+</style>
