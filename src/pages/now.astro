@@ -18,24 +18,35 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <section>
       <h2>Learning</h2>
       <ul>
-        <li>Learning Agentic AI.</li>
+        <li>Learning to build agents.</li>
       </ul>
-      <p>Courses completed in 2026:</p>
+      <p><strong>Courses completed in 2026:</strong></p>
+      <p class="month-label">January</p>
       <ul>
-        <li><a href="https://learn.kodekloud.com/certificate/499eae58-d864-4cae-ac8c-4057f91d1af6" target="_blank" rel="noopener noreferrer">Introduction to Docker for Absolute Beginners — KodeKloud ↗</a></li>
-        <li><a href="https://learn.deeplearning.ai/certificates/5d0996e3-4a19-4ce6-a23e-04ff776e1fee" target="_blank" rel="noopener noreferrer">Retrieval Augmented Generation — DeepLearning.AI ↗</a></li>
-        <li><a href="https://learn.deeplearning.ai/accomplishments/6e080994-da0b-4efa-af34-8af9b4476f22" target="_blank" rel="noopener noreferrer">Building Systems with the ChatGPT API — DeepLearning.AI ↗</a></li>
-        <li><a href="https://learn.deeplearning.ai/accomplishments/380ceeb4-cb3f-44f1-b518-8d1f86af9148?usp=sharing" target="_blank" rel="noopener noreferrer">How Transformer LLMs Work — DeepLearning.AI ↗</a></li>
-        <li><a href="https://learn.deeplearning.ai/accomplishments/59075fa0-945a-40ef-92f3-73a49db41b67" target="_blank" rel="noopener noreferrer">ChatGPT Prompt Engineering — DeepLearning.AI ↗</a></li>
-        <li><a href="https://learn.deeplearning.ai/accomplishments/5cded286-e670-4c15-afd5-033af92e42aa?usp=sharing" target="_blank" rel="noopener noreferrer">Vector Databases: From Embeddings to Applications — DeepLearning.AI ↗</a></li>
-        <li><a href="https://verify.skilljar.com/c/g3kkj8wnp7tm" target="_blank" rel="noopener noreferrer">Claude Code in Action — Anthropic ↗</a></li>
-        <li><a href="https://anthropic.skilljar.com/introduction-to-agent-skills" target="_blank" rel="noopener noreferrer">Introduction to Agent Skills — Anthropic ↗</a></li>
+        <li><a href="https://learn.deeplearning.ai/accomplishments/59075fa0-945a-40ef-92f3-73a49db41b67" target="_blank" rel="noopener noreferrer">ChatGPT Prompt Engineering for Developers ↗</a></li>
+        <li><a href="https://learn.deeplearning.ai/accomplishments/6e080994-da0b-4efa-af34-8af9b4476f22" target="_blank" rel="noopener noreferrer">Building Systems with the ChatGPT API ↗</a></li>
+        <li><a href="https://learn.deeplearning.ai/accomplishments/380ceeb4-cb3f-44f1-b518-8d1f86af9148?usp=sharing" target="_blank" rel="noopener noreferrer">How Transformer LLMs Work ↗</a></li>
+      </ul>
+      <p class="month-label">February</p>
+      <ul>
+        <li><a href="https://learn.kodekloud.com/certificate/499eae58-d864-4cae-ac8c-4057f91d1af6" target="_blank" rel="noopener noreferrer">Docker Training Course for Absolute Beginners ↗</a></li>
+        <li><a href="https://verify.skilljar.com/c/g3kkj8wnp7tm" target="_blank" rel="noopener noreferrer">Claude Code in Action ↗</a></li>
+        <li><a href="https://learn.deeplearning.ai/accomplishments/5cded286-e670-4c15-afd5-033af92e42aa?usp=sharing" target="_blank" rel="noopener noreferrer">Vector Databases: From Embeddings to Applications ↗</a></li>
+      </ul>
+      <p class="month-label">March</p>
+      <ul>
+        <li><a href="https://learn.deeplearning.ai/certificates/5d0996e3-4a19-4ce6-a23e-04ff776e1fee" target="_blank" rel="noopener noreferrer">Retrieval Augmented Generation (RAG) ↗</a></li>
+        <li><a href="https://anthropic.skilljar.com/introduction-to-agent-skills" target="_blank" rel="noopener noreferrer">Introduction to Agent Skills ↗</a></li>
+      </ul>
+      <p class="month-label">April</p>
+      <ul>
+        <li><a href="https://learn.deeplearning.ai/certificates/9b11afeb-afe7-424a-9c1b-2f5dc0f26405?usp=sharing" target="_blank" rel="noopener noreferrer">Agentic AI ↗</a></li>
       </ul>
     </section>
 
     <section>
       <h2>Reading</h2>
-      <p>The Design of Everyday Things — Don Norman</p>
+      <p>The Design of Everyday Things by Don Norman</p>
     </section>
 
   </article>
@@ -61,7 +72,20 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     margin: 0;
   }
 
+  h2 {
+    font-weight: 600;
+  }
+
   p, li {
     color: var(--fg-muted);
+  }
+
+  .month-label {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--fg-faint);
+    margin: 16px 0 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 </style>
