@@ -7,7 +7,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
     <section class="intro">
       <h1>Mridu Bhatnagar</h1>
-      <p>Backend engineer with 7+ years of experience. I care about product and systems thinking. AI has helped me look at projects as a whole -not just the code. Interested in working at the intersection of product, engineering, and AI.</p>
+      <p>Python backend engineer with 7+ years of experience. I care about product and systems thinking. AI has helped me look at projects as a whole -not just the code. Interested in working at the intersection of product, engineering, and AI.</p>
       <div class="socials">
         <a href="mailto:mridubhatnagar4@gmail.com">Email ↗</a>
         <a href="https://www.linkedin.com/in/mridu-bhatnagar-17703a92/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
@@ -40,7 +40,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <li>Built the settlement service for the Deals product from scratch -rolled out to 8,000+ customers.</li>
           <li>Integrated Razorpay Route APIs for accurate and timely merchant settlements in production.</li>
           <li>Automated GST reporting and monthly invoice generation, reducing manual effort by 50%.</li>
-          <li>Mentored a junior engineer and collaborated with Razorpay's technical team to resolve API issues.</li>
         </ul>
       </div>
 
@@ -51,7 +50,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </div>
         <ul>
           <li>Created Python-focused technical content -courses, short-form lessons, API projects, blogs, and conference talks.</li>
-          <li>Worked with LinkedIn Learning, Twilio, egghead.io, Team4Adventure, and international Python conferences.</li>
+          <li>Worked with LinkedIn Learning, Twilio, egghead.io, and international Python conferences.</li>
+          <li>Developed Team4Adventure's website and internal admin dashboards using PHP, HTML, CSS, and JavaScript, streamlining their client enquiries, booking, and payments process.</li>
         </ul>
       </div>
 
@@ -116,16 +116,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     </section>
 
     <section>
-      <h2>Education</h2>
-      <div class="entry">
-        <div class="entry-header">
-          <span class="role">B.Tech, Computer Science · NIIT University</span>
-          <span class="meta">2013 – 2017</span>
-        </div>
-      </div>
-    </section>
-
-    <section>
       <h2>Skills</h2>
       <dl class="skills">
         <div>
@@ -134,37 +124,42 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </div>
         <div>
           <dt>Frameworks</dt>
-          <dd>Flask</dd>
+          <dd>Flask, FastAPI</dd>
         </div>
         <div>
           <dt>Databases</dt>
-          <dd>PostgreSQL, Redis, MongoDB, SQLite, Weaviate, Google Datastore</dd>
+          <dd>PostgreSQL, MySQL, Google Datastore, Redis, Vector Databases</dd>
         </div>
         <div>
-          <dt>Infrastructure</dt>
-          <dd>Docker, AWS (EC2, S3, CloudWatch, IAM), Google Cloud (Bucket, Pub/Sub, Log Explorer)</dd>
-        </div>
-        <div>
-          <dt>APIs</dt>
-          <dd>REST, gRPC</dd>
-        </div>
-        <div>
-          <dt>AI Tools</dt>
-          <dd>Claude Code</dd>
+          <dt>Cloud / Deployment</dt>
+          <dd>AWS EC2, Digital Ocean, Netlify, GitHub Actions</dd>
         </div>
         <div>
           <dt>Tools</dt>
-          <dd>Git, Linux, Celery, Sentry</dd>
+          <dd>Git, Docker, Celery, Claude Code</dd>
         </div>
         <div>
-          <dt>AI / LLMs</dt>
-          <dd>RAG pipelines, vector search, embeddings, OpenAI API</dd>
+          <dt>API Integrations</dt>
+          <dd>OpenAI, Claude API, Slack, Razorpay</dd>
         </div>
         <div>
-          <dt>Frontend</dt>
-          <dd>HTML, CSS</dd>
+          <dt>AI Engineering</dt>
+          <dd>LLM Application Development, Agents, RAG Systems</dd>
         </div>
       </dl>
+    </section>
+
+    <section>
+      <h2>Education</h2>
+      <div class="entry">
+        <div class="entry-header">
+          <span class="role" style="font-weight: 400; color: var(--fg-muted);">B.Tech, Computer Science and Engineering</span>
+          <span class="meta">2013 – 2017</span>
+        </div>
+        <div class="entry-header">
+          <span class="role" style="font-weight: 400; color: var(--fg-muted);">NIIT University, Neemrana (Rajasthan)</span>
+        </div>
+      </div>
     </section>
 
   </article>
@@ -174,7 +169,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   article {
     display: flex;
     flex-direction: column;
-    gap: 48px;
+    gap: 36px;
   }
 
   .intro h1 {
