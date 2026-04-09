@@ -11,7 +11,7 @@ const projects = [
     caseStudy: "/projects/prepit",
   },
   {
-    name: "EnggFeed",
+    name: "SystemsFeed",
     year: "2026",
     description: "Stay ahead of the Stack -curated engineering content to keep you sharp.",
     live: "https://enggfeed.mridulabs.dev",
@@ -22,7 +22,33 @@ const projects = [
 ---
 
 <BaseLayout>
-  <p class="bio">Backend developer with some frontend exposure. Enthusiastic about building products and understanding how systems work. AI has enabled me to think beyond the code -across architecture, product, and execution -and develop a systems thinking mindset.</p>
+  <p class="bio">Backend developer with 7+ years of experience. Enthusiastic about building products and understanding how systems work. AI has enabled me to think beyond the code - across architecture, product, and execution - and develop a systems thinking mindset.</p>
+
+  <div class="highlights">
+    <h2>Work Highlights</h2>
+    <ul class="achievements">
+      <li>Owned development and maintenance of the settlement service, rolled out to 8,000+ customers.</li>
+      <li>Automated GST reporting and invoice generation, reducing manual effort by 50%.</li>
+      <li>Built bulk student marks upsert, eliminating repetitive manual uploads for the academic team.</li>
+      <li>Built exam city edit module for international students, eliminating manual support team intervention.</li>
+    </ul>
+  </div>
+
+  <div class="tech-stack">
+    <h2>Tech Stack</h2>
+    <dl class="stack">
+      <div>
+        <dt>Languages</dt>
+        <dd>Python, JavaScript</dd>
+      </div>
+      <div>
+        <dt>Frameworks</dt>
+        <dd>Flask</dd>
+      </div>
+    </dl>
+  </div>
+
+  <h2>Side Projects</h2>
 
   <ul class="projects">
     {projects.map((p) => (
@@ -45,7 +71,60 @@ const projects = [
 <style>
   .bio {
     color: var(--fg-muted);
-    margin: 0 0 48px;
+    margin: 0 0 24px;
+  }
+
+  .highlights {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0 0 20px;
+  }
+
+  .tech-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 0 0 20px;
+  }
+
+  .achievements {
+    list-style: decimal;
+    padding-left: 1.2rem;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .achievements li {
+    font-size: 14px;
+    color: var(--fg-muted);
+  }
+
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+  }
+
+  .stack div {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 12px;
+    align-items: baseline;
+  }
+
+  .stack dt {
+    font-size: 12px;
+    color: var(--fg-faint);
+  }
+
+  .stack dd {
+    margin: 0;
+    font-size: 14px;
+    color: var(--fg-muted);
   }
 
   .projects {
@@ -55,14 +134,13 @@ const projects = [
   }
 
   .projects li {
-    padding: 24px 0;
-    border-top: 1px solid var(--border);
-    transition: border-color 0.2s ease;
+    padding: 16px 0;
   }
 
-  .projects li:last-child {
-    border-bottom: 1px solid var(--border);
+  .projects li:first-child {
+    padding-top: 0;
   }
+
 
   .row {
     display: flex;
@@ -88,7 +166,7 @@ const projects = [
     font-size: 14px;
   }
 
-  .links {
+.links {
     display: flex;
     gap: 20px;
     font-size: 13px;
