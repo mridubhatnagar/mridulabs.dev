@@ -1,0 +1,130 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<BaseLayout title={`${post.data.title} · Mridu`}>
+  <article>
+    <header>
+      <h1>{post.data.title}</h1>
+      <span class="date">
+        {post.data.date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+      </span>
+    </header>
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+  <a class="back" href="/blog">← Writing</a>
+</BaseLayout>
+
+<style>
+  article {
+    margin-bottom: 48px;
+  }
+
+  header {
+    margin-bottom: 32px;
+  }
+
+  h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--fg-strong);
+    margin: 0 0 6px;
+    letter-spacing: -0.02em;
+    line-height: 1.4;
+  }
+
+  .date {
+    font-size: 12px;
+    color: var(--fg-faint);
+  }
+
+  .prose {
+    color: var(--fg);
+    line-height: 1.75;
+  }
+
+  .prose :global(h2) {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--fg-faint);
+    margin: 32px 0 12px;
+  }
+
+  .prose :global(h3) {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--fg-strong);
+    margin: 24px 0 8px;
+  }
+
+  .prose :global(p) {
+    margin: 0 0 16px;
+    font-size: 15px;
+  }
+
+  .prose :global(ul),
+  .prose :global(ol) {
+    padding-left: 1.4rem;
+    margin: 0 0 16px;
+  }
+
+  .prose :global(li) {
+    margin-bottom: 6px;
+    font-size: 15px;
+  }
+
+  .prose :global(code) {
+    font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+    font-size: 13px;
+    background: var(--border);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+
+  .prose :global(pre) {
+    background: var(--border);
+    padding: 16px;
+    border-radius: 6px;
+    overflow-x: auto;
+    margin: 0 0 16px;
+  }
+
+  .prose :global(pre code) {
+    background: none;
+    padding: 0;
+    font-size: 13px;
+  }
+
+  .prose :global(blockquote) {
+    border-left: 2px solid var(--border-link);
+    margin: 0 0 16px;
+    padding-left: 16px;
+    color: var(--fg-muted);
+  }
+
+  .back {
+    font-size: 13px;
+    color: var(--fg-faint);
+    border-bottom: none;
+  }
+
+  .back:hover {
+    color: var(--fg);
+  }
+</style>

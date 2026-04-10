@@ -1,0 +1,59 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog")).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+---
+
+<BaseLayout title="Writing · Mridu">
+  <h2>Writing</h2>
+  <ul class="posts">
+    {posts.map((post) => (
+      <li>
+        <div class="row">
+          <a href={`/blog/${post.id}`}>{post.data.title}</a>
+          <span class="date">
+            {post.data.date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+          </span>
+        </div>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>
+
+<style>
+  .posts {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .posts li {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .posts a {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--fg-strong);
+  }
+
+  .date {
+    font-size: 12px;
+    color: var(--fg-faint);
+  }
+
+</style>
