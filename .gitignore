@@ -30,4 +30,5 @@ resume.txt
 
 # resume with personal contact details
 resume-typst/cobalt-cv/main.typ
-resume-typst/cobalt-cv/mridu-cobalt-cv.pdf
+# all compiled PDFs in resume-typst (generated files)
+resume-typst/**/*.pdf
