@@ -93,7 +93,7 @@
 
 #line(length: 100%, stroke: accent)
 
-I am a Python Backend Developer with 7+ years of experience. Beyond traditional backend engineering, I follow spec-driven development and am conversant with contemporary AI agentic coding tools. Looking to work at the intersection of product, engineering, and AI. Personal portfolio: #link("https://mridulabs.dev")[mridulabs.dev]
+I am a Python Backend Developer with 7+ years of experience. Beyond traditional backend engineering, I follow spec-driven development and am conversant with contemporary AI agentic coding tools. Looking forward to working at the intersection of product, engineering, and AI. Personal portfolio site at: #link("https://mridulabs.dev")[mridulabs.dev]
 
 #line(length: 100%, stroke: accent)
 
