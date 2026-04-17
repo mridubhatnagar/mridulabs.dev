@@ -9,7 +9,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "resume": "typst compile resume-typst/cobalt-cv/main.typ resume-typst/cobalt-cv/mridu-cobalt-cv.pdf",
+    "resume:public": "typst compile resume-typst/cobalt-cv/main-public.typ public/mridu-bhatnagar-resume.pdf"
   },
   "dependencies": {
     "astro": "^6.0.7",

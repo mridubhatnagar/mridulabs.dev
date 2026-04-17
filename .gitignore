@@ -27,3 +27,7 @@ pnpm-debug.log*
 # personal notes
 blog-ideas.md
 resume.txt
+
+# resume with personal contact details
+resume-typst/cobalt-cv/main.typ
+resume-typst/cobalt-cv/mridu-cobalt-cv.pdf
