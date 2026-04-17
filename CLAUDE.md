@@ -17,7 +17,7 @@ Also keep these in sync with the web versions:
 
 ```bash
 # Job application version (with phone)
-typst compile resume-typst/cobalt-cv/main.typ resume-typst/cobalt-cv/mridu-cobalt-cv.pdf
+typst compile resume-typst/cobalt-cv/main.typ resume-typst/cobalt-cv/mridu-resume.pdf
 
 # Public website version (no phone)
 typst compile resume-typst/cobalt-cv/main-public.typ public/mridu-bhatnagar-resume.pdf

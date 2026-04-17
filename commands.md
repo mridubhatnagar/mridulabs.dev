@@ -14,7 +14,7 @@ npm run resume:public
 ### Open PDF
 ```bash
 # Job application version
-xdg-open resume-typst/cobalt-cv/mridu-cobalt-cv.pdf
+xdg-open resume-typst/cobalt-cv/mridu-resume.pdf
 
 # Public version
 xdg-open resume-typst/cobalt-cv/mridu-bhatnagar-resume.pdf
