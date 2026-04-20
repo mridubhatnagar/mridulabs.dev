@@ -9,14 +9,22 @@ const projects = [
     live: "https://prepit.mridulabs.dev",
     github: "https://github.com/mridubhatnagar/prepwise",
     caseStudy: "/projects/prepit",
+    challenges: [
+      "Batch ingestion silently fell back to keyword search with no error -caught only via shell experiments.",
+      "Deleting messages to manage context window cost meant losing training data -switched to session IDs instead.",
+      "Hybrid search score can't measure semantic relevance -used near_vector distance separately for out-of-scope detection.",
+    ],
   },
   {
     name: "SystemsFeed",
     year: "2026",
-    description: "Stay ahead of the Stack -curated engineering content to keep you sharp.",
+    description: "AI reading layer on top of engineering blogs -summaries, tags, prerequisites, and ELI5.",
     live: "https://enggfeed.mridulabs.dev",
     github: "https://github.com/mridubhatnagar/enggfeed",
     caseStudy: null,
+    challenges: [
+      "Built tag normalization in layers: evals to measure quality, prompt refinement, semantic search for fuzzy duplicates, DB unique constraint for exact ones.",
+    ],
   },
 ];
 ---
@@ -44,6 +52,11 @@ const projects = [
           <span class="year">{p.year}</span>
         </div>
         <p class="desc">{p.description}</p>
+        {p.challenges && (
+          <ul class="challenges">
+            {p.challenges.map((c) => <li>{c}</li>)}
+          </ul>
+        )}
         <div class="links">
           {p.live && <a href={p.live} target="_blank" rel="noopener noreferrer">Live ↗</a>}
           {p.github && <a href={p.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>}
@@ -198,6 +211,20 @@ const projects = [
     color: var(--fg-muted);
     margin: 0 0 4px;
     font-size: 14px;
+  }
+
+  .challenges {
+    list-style: disc;
+    padding-left: 1.1rem;
+    margin: 0 0 6px;
+  }
+
+  .challenges li {
+    font-size: 13px;
+    color: var(--fg-faint);
+    line-height: 1.4;
+    margin: 0;
+    padding-block: 0;
   }
 
 .links {
