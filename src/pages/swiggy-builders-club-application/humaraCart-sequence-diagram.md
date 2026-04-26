@@ -1,5 +1,5 @@
 ---
-layout: "../layouts/ReadmeLayout.astro"
+layout: "../../layouts/ReadmeLayout.astro"
 title: "HumaraCart · MCP Tool Call Flow"
 ---
 
