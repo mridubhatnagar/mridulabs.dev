@@ -125,11 +125,14 @@ flowchart LR
 | Layer | Choice |
 |-------|--------|
 | Backend | Python, FastAPI |
+| Agent Orchestration | LangGraph |
 | MCP Client | Swiggy Instamart MCP |
 | Swiggy APIs | TBD. Depends on what is available and exposed (e.g. shareable cart link, order tracking) |
 | Messaging | WhatsApp Business API |
+| Database | PostgreSQL |
+| Hosting | DigitalOcean |
 
-The backend acts as the MCP client, receiving WhatsApp messages, resolving household context, and making Instamart MCP tool calls to search products and manage the shared cart.
+The backend acts as the MCP client, receiving WhatsApp messages, resolving household context, and making Instamart MCP tool calls to search products and manage the shared cart. LangGraph orchestrates the stateful agent flows, handling multi-turn interactions like brand resolution and quantity confirmation. Household data, member mappings, and brand preferences are persisted in PostgreSQL.
 
 ---
 
