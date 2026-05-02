@@ -6,7 +6,7 @@ title: "HumaraCart · Swiggy Builders Club Application"
 # HumaraCart: A Collaborative Household Instamart Assistant
 ### Swiggy Builders Club: Developer Program Application
 
-*Created At: 25 April, 2026*<br>*Last Edited At: 27 April, 2026*<br>*Submitted At: 27 April, 2026*
+*Created At: 25 April, 2026*<br>*Last Edited At: 2 May, 2026*<br>*Submitted At: 27 April, 2026*
 
 ---
 
@@ -29,9 +29,9 @@ Throughout the day, as people notice things running low, they just say it:
 - Sneha: `add chips`
 - Rahul: `remove detergent`
 - Sneha: `show list`
-- HumaraCart: `Current list: milk, chips`
+- HumaraCart: *🛒 Cart (2 items)*<br>*1.* Milk<br>*2.* Chips
 
-HumaraCart maintains a running cart for the household. No one has to remember. No one has to open Instamart. When the list feels ready, any member nudges the account holder. The account holder gets a direct Instamart cart link, opens the app, and places the order themselves. That is it.
+HumaraCart maintains a running cart for the household. No one has to remember. No one has to open Instamart. When the list feels ready, any member nudges the account holder. The account holder gets notified, opens Instamart, and places the order themselves. That is it.
 
 This is the vision.
 
@@ -92,6 +92,7 @@ flowchart LR
 
 **Setup (done once by the account holder):**
 - The account holder saves the HumaraCart number, initiates a chat, and links their existing Instamart account via OAuth. No new account needed.
+- During OAuth, the bot fetches the account holder's saved delivery address and stores it as the household's default — required for product searches on Instamart.
 - The bot generates a secure invite link. The account holder forwards this to other members.
 - New members tap the link, WhatsApp opens, and the bot adds them to the household.
 - The bot greets new members: *"Welcome to HumaraCart, powered by Swiggy Instamart. You have joined Priya's Household. Orders are fulfilled by Instamart via Priya's account. You do not need one."*
@@ -101,13 +102,13 @@ flowchart LR
 - Any member messages the bot: `add milk`, `add detergent 2`, `add chips`, `remove milk`, `show list`
 - If quantity is missing, the bot asks: `How many?`
 - If there is a brand conflict, the bot asks rather than assumes: `Which brand of milk?`
-- The bot uses Swiggy's Instamart MCP tools to search items, resolve brands, and build the cart on behalf of the household.
+- The bot uses Swiggy's Instamart MCP tools to search items and resolve brands. Cart state is maintained in Redis (write-through to PostgreSQL) throughout the day.
+- If the cart is frozen, any add or remove command is rejected: *"Cart has been frozen. No more changes can be made."*
 
 **Ordering:**
-- Any member can nudge the account holder: `ready to order`. The bot forwards it: *"Priya thinks the cart is ready. Want to review?"*
-- The account holder sends `send cart link`. The bot sends a full summary of the current cart.
-- The cart is already pre-populated on Instamart, built continuously via MCP as members added and removed items throughout the day.
-- If a shareable cart link is available via the MCP or API, it is sent directly. Otherwise the account holder is notified to open Instamart where their cart is already populated.
+- Any member can nudge the account holder: `ready to order`. The bot forwards it: *"Priya thinks the cart is ready. Want to review?"* The account holder can also initiate checkout independently at any time.
+- The account holder sends `freeze cart`. The cart is locked — no further additions or removals are accepted. All members are notified: *"Cart has been frozen by Priya. No more items can be added."*
+- The backend calls `update_cart` once to create the cart on Instamart using the item list built over WhatsApp. The bot then sends the account holder a full item summary along with: *"Cart created on Instamart. It will expire in X minutes. Open Instamart to place your order."* (The Instamart MCP does not expose a shareable cart link.)
 - The account holder checks out on Instamart directly. The agent's job ends at cart creation.
 - Delivery updates are shared with all household members via the bot.
 
@@ -127,19 +128,22 @@ flowchart LR
 | Backend | Python, FastAPI |
 | Agent Orchestration | LangGraph |
 | MCP Client | Swiggy Instamart MCP |
-| Swiggy APIs | TBD. Depends on what is available and exposed (e.g. shareable cart link, order tracking) |
+| Swiggy APIs | TBD. Depends on what is available and exposed (e.g. order tracking) |
 | Messaging | WhatsApp Business API |
+| Cache | Redis |
 | Database | PostgreSQL |
 | Infrastructure | Docker |
 | Hosting | DigitalOcean |
 
-The backend acts as the MCP client, receiving WhatsApp messages, resolving household context, and making Instamart MCP tool calls to search products and manage the shared cart. LangGraph orchestrates the stateful agent flows, handling multi-turn interactions like brand resolution and quantity confirmation. Household data, member mappings, and brand preferences are persisted in PostgreSQL.
+The backend acts as the MCP client, receiving WhatsApp messages, resolving household context, and making Instamart MCP tool calls to search products and manage the shared cart. LangGraph orchestrates the stateful agent flows, handling multi-turn interactions like brand resolution and quantity confirmation.
+
+Active cart state is managed using a write-through cache: every add/remove writes to both Redis and PostgreSQL simultaneously. Redis serves fast reads throughout the day; PostgreSQL is the durable backing store. At freeze, the cart is created on Instamart in a single `update_cart` call. Household data, member mappings, and brand preferences are persisted in PostgreSQL.
 
 ---
 
 ## How We Plan to Use Swiggy Instamart MCP?
 
-Our backend acts as the MCP Client. Every cart action is driven by Instamart MCP tool calls.
+Our backend acts as the MCP Client. Cart creation and order management are driven by Instamart MCP tool calls.
 
 > **Note:** For a detailed step-by-step MCP tool call flow, see the sequence diagram [here](/swiggy-builders-club-application/humaraCart-sequence-diagram).
 
@@ -147,15 +151,13 @@ Our backend acts as the MCP Client. Every cart action is driven by Instamart MCP
 | Tool | Triggered When | What It Enables |
 |------|---------------|-----------------|
 | `search_products` | Member adds an item | Finds the right product on Instamart |
-| `update_cart` | Item added or removed | Modifies the shared household cart |
-| `get_cart` | After every cart change | Fetches current state to broadcast to all members |
+| `update_cart` | Account holder freezes the cart | Creates the cart on Instamart using the item list built over WhatsApp. Incremental add/remove is unavailable per MCP docs — cart state is owned by the backend throughout the day and synced to Instamart once at freeze |
+| `get_cart` | After `update_cart` succeeds at freeze | Fetches the confirmed cart state from Instamart to send as a summary to the account holder |
 | `checkout` | V3: agent places order on household's behalf | Used when auto-restock is enabled or account holder grants agent permission to order on approval |
 | `track_order` | After order is placed | Fetches live order status for broadcast |
 | `get_orders` | V2: purchase patterns | Enables reorder reminders based on history |
 
-> **Open question for Swiggy:** Does the MCP or any API expose a shareable cart link?
-> - **If yes:** Agent sends the cart link directly to the account holder via WhatsApp.
-> - **If no:** Agent notifies the account holder: *"Cart link unavailable. Open Instamart, your cart is ready."*
+> **Confirmed:** The Instamart MCP does not expose a shareable cart link. The account holder opens Instamart directly to check out — their cart is already populated by the agent.
 
 ---
 
