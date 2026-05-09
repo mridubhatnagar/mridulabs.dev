@@ -11,7 +11,9 @@
     "preview": "astro preview",
     "astro": "astro",
     "resume": "typst compile resume-typst/cobalt-cv/main.typ resume-typst/cobalt-cv/mridu-resume.pdf",
-    "resume:public": "typst compile resume-typst/cobalt-cv/main-public.typ public/mridu-bhatnagar-resume.pdf"
+    "resume:public": "typst compile resume-typst/cobalt-cv/main-public.typ public/mridu-bhatnagar-resume.pdf",
+    "resume:ats": "typst compile resume-typst/cobalt-cv/main-ats.typ resume-typst/cobalt-cv/mridu-resume-ats.pdf",
+    "resume:ats-public": "typst compile resume-typst/cobalt-cv/main-ats-public.typ public/mridu-bhatnagar-resume-ats.pdf"
   },
   "dependencies": {
     "astro": "^6.0.7",

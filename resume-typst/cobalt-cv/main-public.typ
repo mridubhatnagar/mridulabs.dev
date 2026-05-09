@@ -93,9 +93,13 @@
 
 #line(length: 100%, stroke: accent)
 
-I am a Python Backend Developer with 7+ years of experience. I apply spec-driven development to AI systems and leverage contemporary agentic coding tools to amplify output. Looking forward to working at the intersection of product, engineering, and AI. Personal portfolio site at: #link("https://mridulabs.dev")[mridulabs.dev]
+#v(-0.4em)
+I am a Python Backend Developer with 7+ years of experience. I apply spec-driven development to AI systems and leverage contemporary agentic coding tools to amplify output. Looking forward to working at the intersection of product, engineering, and AI. \
+Personal portfolio site at: #link("https://mridulabs.dev")[mridulabs.dev]
+#v(-0.4em)
 
 #line(length: 100%, stroke: accent)
+#v(-0.5em)
 
 // ─── Body ─────────────────────────────────────────────────────────────────────
 
@@ -114,7 +118,7 @@ I am a Python Backend Developer with 7+ years of experience. I apply spec-driven
       "NIIT University",
       "Neemrana, India",
       "2013 – 2017",
-      ("B.Tech, Computer Science",),
+      ("B.Tech, Computer Science and Engineering",),
     )
 
     #line(stroke: (dash: "dashed", paint: accent), length: 90%)
@@ -123,10 +127,11 @@ I am a Python Backend Developer with 7+ years of experience. I apply spec-driven
 
     #skill-category("Languages", ("Python", "JavaScript"))
     #skill-category("Frameworks", ("Flask", "FastAPI"))
-    #skill-category("Databases", ("PostgreSQL", "MySQL", "Redis", "Vector DBs"))
-    #skill-category("Cloud", ("AWS EC2", "GCP Pub/Sub", "Digital Ocean", "GitHub Actions"))
-    #skill-category("Tools", ("Git", "Docker", "Celery"))
-    #skill-category("AI Engineering", ("LLM Apps", "Agents", "RAG Systems", "LangGraph", "OpenAI API", "Claude API"))
+    #skill-category("Databases", ("PostgreSQL", "MySQL", "Redis", "Weaviate"))
+    #skill-category("Cloud / Deployment", ("AWS EC2", "Google Cloud Pub/Sub", "Digital Ocean", "GitHub Actions"))
+    #skill-category("Tools", ("Git", "Docker", "Celery", "Claude Code", "Gemini CLI"))
+    #skill-category("API Integrations", ("OpenAI", "Claude API", "Slack", "Razorpay", "WebEngage", "Gmail"))
+    #skill-category("AI Engineering", ("LLM Applications", "Agents", "RAG Systems", "LangGraph"))
 
     #line(stroke: (dash: "dashed", paint: accent), length: 90%)
 
@@ -141,17 +146,16 @@ I am a Python Backend Developer with 7+ years of experience. I apply spec-driven
     #project-entry(
       "SystemsFeed",
       "https://enggfeed.mridulabs.dev",
-      [Curated engineering content to keep you sharp. #link("https://github.com/mridubhatnagar/enggfeed")[GitHub ↗]],
+      [AI summaries, tags, and ELI5 for engineering blogs. #link("https://github.com/mridubhatnagar/enggfeed")[GitHub ↗]],
     )
 
     #line(stroke: (dash: "dashed", paint: accent), length: 90%)
 
     = #upper("Speaking & Content")
 
-    - Python courses on LinkedIn Learning
-    - API tutorials for Twilio developer blog
-    - Lessons on egghead.io
-    - Spoke at PyData Delhi, EuroPython, PyLadies meetups
+    - Courses on LinkedIn Learning
+    - Tutorials on Twilio blog and egghead.io
+    - Talks at PyData, EuroPython, PyLadies
 
   ],
   [
@@ -192,7 +196,7 @@ I am a Python Backend Developer with 7+ years of experience. I apply spec-driven
       "Remote",
       "Jan 2020 – Jul 2021",
       (
-        [Built a JSON-based custom CRM replacing WordPress, delivering ~50% improvement in page creation speed.],
+        [Built a JSON-based custom CMS replacing WordPress, delivering ~50% improvement in page creation speed.],
         [Built a Query & Booking Management system reducing per-booking processing time by 75%.],
       ),
     )
@@ -201,7 +205,7 @@ I am a Python Backend Developer with 7+ years of experience. I apply spec-driven
       "Goibibo",
       "Software Engineer",
       "Gurugram",
-      "2018 – 2020",
+      "Aug 2018 – Jan 2020",
       (
         [Built and maintained API integrations for partners including Criteo and WebEngage.],
         [Automated data pipelines to generate daily reports, reducing manual effort.],
@@ -231,5 +235,3 @@ I am a Python Backend Developer with 7+ years of experience. I apply spec-driven
 
   ],
 )
-
-#line(length: 100%, stroke: accent)
