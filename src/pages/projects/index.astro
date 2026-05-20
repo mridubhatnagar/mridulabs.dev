@@ -3,9 +3,19 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 
 const projects = [
   {
+    name: "JobPilot",
+    date: "In progress",
+    description: "Personal job search system -finds relevant JDs across platforms, scores each against the provided resume, with a career-coach layer exposed via MCP so it plugs into Claude, ChatGPT, and other AI clients.",
+    tags: ["Python", "MCP", "FastMCP", "Google Drive API", "Apify", "LLM", "Docker", "Google Cloud Run", "GitHub Actions", "Claude Code"],
+    live: null,
+    github: "https://github.com/mridubhatnagar/jobfinder",
+    caseStudy: null,
+  },
+  {
     name: "Contentflo",
     date: "April 2026",
     description: "AI content workflow in Slack -generates topics, captions, and images with team review built in.",
+    tags: ["Python", "FastAPI", "Slack API", "Google OAuth", "LLM", "LangGraph", "Docker", "DigitalOcean", "GitHub Actions", "Claude Code"],
     live: "https://contentflo.mridulabs.dev",
     github: null,
     caseStudy: null,
@@ -14,6 +24,7 @@ const projects = [
     name: "SystemsFeed",
     date: "April 2026",
     description: "AI reading layer on top of engineering blogs -summaries, tags, prerequisites, and ELI5.",
+    tags: ["Python", "FastAPI", "Google OAuth", "LLM", "HTML", "CSS", "Alpine.js", "Embedding", "PgVector", "Postgres", "Docker", "DigitalOcean", "GitHub Actions", "Claude Code"],
     live: "https://enggfeed.mridulabs.dev",
     github: "https://github.com/mridubhatnagar/enggfeed",
     caseStudy: null,
@@ -22,6 +33,7 @@ const projects = [
     name: "Prepit",
     date: "March 2026",
     description: "RAG-based knowledge base for interview prep -built end to end.",
+    tags: ["Python", "FastAPI", "Google OAuth", "LLM", "HTML", "CSS", "Alpine.js", "Weaviate", "Docker", "AWS EC2", "GitHub Actions", "Claude Code"],
     live: "https://prepit.mridulabs.dev",
     github: "https://github.com/mridubhatnagar/prepwise",
     caseStudy: "/projects/prepit",
@@ -35,15 +47,23 @@ const projects = [
     {projects.map((p) => (
       <li>
         <div class="row">
-          <span class="name">{p.name}</span>
+          <div class="title-group">
+            {p.github ? (
+              <a href={p.github} class="name name-link" target="_blank" rel="noopener noreferrer">{p.name}</a>
+            ) : (
+              <span class="name">{p.name}</span>
+            )}
+            {p.live && <a class="meta-link" href={p.live} target="_blank" rel="noopener noreferrer">Live ↗</a>}
+            {p.caseStudy && <a class="meta-link" href={p.caseStudy}>Case Study →</a>}
+          </div>
           <span class="date">{p.date}</span>
         </div>
         <p class="desc">{p.description}</p>
-        <div class="links">
-          {p.live && <a href={p.live} target="_blank" rel="noopener noreferrer">Live ↗</a>}
-          {p.github && <a href={p.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>}
-          {p.caseStudy && <a href={p.caseStudy}>Case Study →</a>}
-        </div>
+        {p.tags?.length > 0 && (
+          <ul class="tags">
+            {p.tags.map((t) => <li>{t}</li>)}
+          </ul>
+        )}
       </li>
     ))}
   </ul>
@@ -59,7 +79,7 @@ const projects = [
     gap: 24px;
   }
 
-  .projects li {
+  .projects > li {
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -69,12 +89,29 @@ const projects = [
     display: flex;
     justify-content: space-between;
     align-items: baseline;
+    gap: 12px;
+  }
+
+  .title-group {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
   }
 
   .name {
     font-weight: 500;
     color: var(--fg-strong);
     font-size: 15px;
+  }
+
+  .name-link {
+    color: var(--fg-strong);
+  }
+
+  .meta-link {
+    font-size: 12px;
+    color: var(--fg-faint);
   }
 
   .date {
@@ -88,10 +125,22 @@ const projects = [
     font-size: 14px;
   }
 
-  .links {
+  .tags {
+    list-style: none;
+    padding: 0;
+    margin: 6px 0 0 0;
     display: flex;
-    gap: 20px;
-    font-size: 13px;
-    margin-top: 2px;
+    flex-wrap: wrap;
+    gap: 6px;
   }
+
+  .tags li {
+    font-size: 11px;
+    color: var(--fg-muted);
+    background: var(--border);
+    padding: 2px 8px;
+    border-radius: 4px;
+    line-height: 1.6;
+  }
+
 </style>

@@ -40,7 +40,7 @@ sequenceDiagram
     Note over AH,MCP: Checkout
     AH->>Bot: "send cart link"
     Note over Bot: cart is pre-populated via update_cart calls
-    Bot-->>AH: open Instamart — your cart is ready
+    Bot-->>AH: open Instamart, your cart is ready
     Note over AH: reviews and places order manually on Instamart
 
     Note over AH,MCP: Order Tracking

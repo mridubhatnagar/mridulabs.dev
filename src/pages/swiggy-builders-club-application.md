@@ -92,7 +92,7 @@ flowchart LR
 
 **Setup (done once by the account holder):**
 - The account holder saves the HumaraCart number, initiates a chat, and links their existing Instamart account via OAuth. No new account needed.
-- During OAuth, the bot fetches the account holder's saved delivery address and stores it as the household's default — required for product searches on Instamart.
+- During OAuth, the bot fetches the account holder's saved delivery address and stores it as the household's default (required for product searches on Instamart).
 - The bot generates a secure invite link. The account holder forwards this to other members.
 - New members tap the link, WhatsApp opens, and the bot adds them to the household.
 - The bot greets new members: *"Welcome to HumaraCart, powered by Swiggy Instamart. You have joined Priya's Household. Orders are fulfilled by Instamart via Priya's account. You do not need one."*
@@ -107,7 +107,7 @@ flowchart LR
 
 **Ordering:**
 - Any member can nudge the account holder: `ready to order`. The bot forwards it: *"Priya thinks the cart is ready. Want to review?"* The account holder can also initiate checkout independently at any time.
-- The account holder sends `freeze cart`. The cart is locked — no further additions or removals are accepted. All members are notified: *"Cart has been frozen by Priya. No more items can be added."*
+- The account holder sends `freeze cart`. The cart is locked. No further additions or removals are accepted. All members are notified: *"Cart has been frozen by Priya. No more items can be added."*
 - The backend calls `update_cart` once to create the cart on Instamart using the item list built over WhatsApp. The bot then sends the account holder a full item summary along with: *"Cart created on Instamart. It will expire in X minutes. Open Instamart to place your order."* (The Instamart MCP does not expose a shareable cart link.)
 - The account holder checks out on Instamart directly. The agent's job ends at cart creation.
 - Delivery updates are shared with all household members via the bot.
@@ -151,13 +151,13 @@ Our backend acts as the MCP Client. Cart creation and order management are drive
 | Tool | Triggered When | What It Enables |
 |------|---------------|-----------------|
 | `search_products` | Member adds an item | Finds the right product on Instamart |
-| `update_cart` | Account holder freezes the cart | Creates the cart on Instamart using the item list built over WhatsApp. Incremental add/remove is unavailable per MCP docs — cart state is owned by the backend throughout the day and synced to Instamart once at freeze |
+| `update_cart` | Account holder freezes the cart | Creates the cart on Instamart using the item list built over WhatsApp. Incremental add/remove is unavailable per MCP docs. Cart state is owned by the backend throughout the day and synced to Instamart once at freeze |
 | `get_cart` | After `update_cart` succeeds at freeze | Fetches the confirmed cart state from Instamart to send as a summary to the account holder |
 | `checkout` | V3: agent places order on household's behalf | Used when auto-restock is enabled or account holder grants agent permission to order on approval |
 | `track_order` | After order is placed | Fetches live order status for broadcast |
 | `get_orders` | V2: purchase patterns | Enables reorder reminders based on history |
 
-> **Confirmed:** The Instamart MCP does not expose a shareable cart link. The account holder opens Instamart directly to check out — their cart is already populated by the agent.
+> **Confirmed:** The Instamart MCP does not expose a shareable cart link. The account holder opens Instamart directly to check out. Their cart is already populated by the agent.
 
 ---
 

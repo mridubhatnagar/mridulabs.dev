@@ -1,4 +1,4 @@
-# HumaraCart vs. Swiggy Instamart MCP — Evaluation
+# HumaraCart vs. Swiggy Instamart MCP: Evaluation
 
 *Evaluated: 1 May 2026*
 
@@ -11,7 +11,7 @@ Every tool the project listed is present in the actual MCP:
 | Project Tool | Status | Notes |
 |---|---|---|
 | `search_products` | ✅ | Present |
-| `update_cart` | ✅ | Present — but see caveat below |
+| `update_cart` | ✅ | Present, but see caveat below |
 | `get_cart` | ✅ | Present |
 | `checkout` | ✅ | Present (V3) |
 | `track_order` | ✅ | Present |
@@ -23,7 +23,7 @@ Every tool the project listed is present in the actual MCP:
 
 **`update_cart` replaces the entire cart, not incremental add/remove.**
 
-The project frames it as "item added → call `update_cart`" as if it's additive. In reality, every `add milk` or `remove detergent` must send the full current cart state as a replacement. This doesn't break the design — PostgreSQL already stores cart state, so the backend computes the new state and pushes the full list — but it's a non-obvious implementation detail the current doc doesn't surface.
+The project frames it as "item added → call `update_cart`" as if it's additive. In reality, every `add milk` or `remove detergent` must send the full current cart state as a replacement. This doesn't break the design (PostgreSQL already stores cart state, so the backend computes the new state and pushes the full list), but it's a non-obvious implementation detail the current doc doesn't surface.
 
 ---
 
@@ -47,7 +47,7 @@ The MCP provides `get_addresses`, `create_address`, and `delete_address` tools (
 
 | Tool | Relevance |
 |---|---|
-| `your_go_to_items` | Strong fit for V2 reorder reminders — complements `get_orders` |
+| `your_go_to_items` | Strong fit for V2 reorder reminders; complements `get_orders` |
 | `get_addresses` / `create_address` / `delete_address` | Needed for address setup during onboarding |
 | `get_order_details` | Could enrich delivery broadcast messages |
 | `clear_cart` | Minor utility; `update_cart` with empty list likely covers it |
@@ -58,8 +58,8 @@ The MCP provides `get_addresses`, `create_address`, and `delete_address` tools (
 
 The project design is largely sound. Core tools are all there. Two things need attention when building:
 
-1. `update_cart` is a full-replace — the backend owns the source of truth, not Instamart.
-2. Address selection is a prerequisite for search — the setup flow must include address handling, which the MCP supports but the current doc doesn't mention.
+1. `update_cart` is a full-replace. The backend owns the source of truth, not Instamart.
+2. Address selection is a prerequisite for search. The setup flow must include address handling, which the MCP supports but the current doc doesn't mention.
 
 ---
 
