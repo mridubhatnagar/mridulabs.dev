@@ -23,6 +23,10 @@ typst compile resume-typst/cobalt-cv/main.typ resume-typst/cobalt-cv/mridu-resum
 typst compile resume-typst/cobalt-cv/main-public.typ public/mridu-bhatnagar-resume.pdf
 ```
 
+## Now Page Stamp
+
+`src/pages/now.astro` has an "Updated [date]" line near the top. Whenever any edit is made to the website, bump this stamp to today's date as part of the same change.
+
 ## Future Ideas
 
 - `resume-single-source.md` — plan for a single YAML source of truth that feeds both the website and PDF resume

@@ -86,6 +86,9 @@ const { title = "Mridu" } = Astro.props;
     display: flex;
     align-items: center;
     gap: 20px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    row-gap: 8px;
   }
 
   #theme-toggle {
@@ -101,5 +104,20 @@ const { title = "Mridu" } = Astro.props;
 
   #theme-toggle:hover {
     color: var(--fg-strong);
+  }
+
+  @media (max-width: 600px) {
+    header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      padding-bottom: 16px;
+      margin-bottom: 28px;
+    }
+
+    nav {
+      gap: 14px;
+      justify-content: flex-start;
+    }
   }
 </style>

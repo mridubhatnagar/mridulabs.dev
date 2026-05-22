@@ -6,7 +6,7 @@ title: "HumaraCart · Swiggy Builders Club Application"
 # HumaraCart: A Collaborative Household Instamart Assistant
 ### Swiggy Builders Club: Developer Program Application
 
-*Created At: 25 April, 2026*<br>*Last Edited At: 2 May, 2026*<br>*Submitted At: 27 April, 2026*
+*Created At: 25 April, 2026*<br>*Last Edited At: 21 May, 2026*<br>*Submitted At: 27 April, 2026*
 
 ---
 
@@ -96,14 +96,14 @@ flowchart LR
 - The bot generates a secure invite link. The account holder forwards this to other members.
 - New members tap the link, WhatsApp opens, and the bot adds them to the household.
 - The bot greets new members: *"Welcome to HumaraCart, powered by Swiggy Instamart. You have joined Priya's Household. Orders are fulfilled by Instamart via Priya's account. You do not need one."*
-- Brand preferences are configured upfront for common items.
+- Brand preferences are pre-seeded with sensible Indian defaults at household creation (e.g. Amul milk, Aashirvaad atta, Fortune oil). Members can override any item with the `change` command; the new preference is saved automatically.
 
 **Day-to-day usage:**
-- Any member messages the bot: `add milk`, `add detergent 2`, `add chips`, `remove milk`, `show list`
-- If quantity is missing, the bot asks: `How many?`
-- If there is a brand conflict, the bot asks rather than assumes: `Which brand of milk?`
-- The bot uses Swiggy's Instamart MCP tools to search items and resolve brands. Cart state is maintained in Redis (write-through to PostgreSQL) throughout the day.
-- If the cart is frozen, any add or remove command is rejected: *"Cart has been frozen. No more changes can be made."*
+- Any member messages the bot: `add milk`, `add detergent 2`, `add chips`, `remove milk`, `change milk to Mother Dairy`, `show list`.
+- Brand is picked silently using the household's saved preferences, falling back to sensible Indian defaults (Amul milk, Aashirvaad atta, etc.) so the agent never blocks on questions. Quantity defaults to 1 unless the member states otherwise.
+- To override, any member can say `change milk to Mother Dairy` or `change milk qty to 2`. Brand overrides update the household's saved preference for next time; quantity overrides apply to the current cart only.
+- The bot uses Swiggy's Instamart MCP tools to search items and resolve the right SKU based on the chosen brand. Cart state is maintained in Redis (write-through to PostgreSQL) throughout the day.
+- If the cart is frozen, any add, remove, or change command is rejected: *"Cart has been frozen. No more changes can be made."*
 
 **Ordering:**
 - Any member can nudge the account holder: `ready to order`. The bot forwards it: *"Priya thinks the cart is ready. Want to review?"* The account holder can also initiate checkout independently at any time.
@@ -126,16 +126,19 @@ flowchart LR
 | Layer | Choice |
 |-------|--------|
 | Backend | Python, FastAPI |
+| Intent Classification | LangChain (`with_structured_output` + Pydantic) |
 | Agent Orchestration | LangGraph |
-| MCP Client | Swiggy Instamart MCP |
+| LLM | Claude Sonnet 4.6 (via `ChatAnthropic`) |
+| MCP Client | Swiggy Instamart MCP (sandbox for V1; production for V2) |
 | Swiggy APIs | TBD. Depends on what is available and exposed (e.g. order tracking) |
-| Messaging | WhatsApp Business API |
+| Messaging | Twilio Sandbox for WhatsApp (V1); WhatsApp Business API (V2) |
 | Cache | Redis |
 | Database | PostgreSQL |
+| Observability | LangSmith |
 | Infrastructure | Docker |
-| Hosting | DigitalOcean |
+| Hosting | Local for V1 (laptop + ngrok or cloudflared tunnelling the Twilio webhook); DigitalOcean for V2+ |
 
-The backend acts as the MCP client, receiving WhatsApp messages, resolving household context, and making Instamart MCP tool calls to search products and manage the shared cart. LangGraph orchestrates the stateful agent flows, handling multi-turn interactions like brand resolution and quantity confirmation.
+The backend acts as the MCP client, receiving WhatsApp messages, resolving household context, and making Instamart MCP tool calls to search products and manage the shared cart. LangChain classifies inbound messages into a typed `Intent` via structured-output parsing, so natural-language variants (*"milk please"*, *"drop the detergent"*) are recognised robustly. LangGraph orchestrates the stateful agent flows: routing intents to handler subgraphs, mutating cart state across nodes, and persisting via the write-through store.
 
 Active cart state is managed using a write-through cache: every add/remove writes to both Redis and PostgreSQL simultaneously. Redis serves fast reads throughout the day; PostgreSQL is the durable backing store. At freeze, the cart is created on Instamart in a single `update_cart` call. Household data, member mappings, and brand preferences are persisted in PostgreSQL.
 
