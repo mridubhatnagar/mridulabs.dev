@@ -34,7 +34,7 @@ Python Backend Developer with 7+ years of experience. I apply spec-driven develo
 
 - *Languages:* Python, JavaScript
 - *Frameworks:* Flask, FastAPI
-- *Databases:* PostgreSQL, MySQL, Redis, Weaviate
+- *Databases:* PostgreSQL, MySQL, Google Datastore, Redis, Weaviate
 - *Cloud / Deployment:* AWS EC2, Google Cloud Pub/Sub, Digital Ocean, GitHub Actions
 - *Tools:* Git, Docker, Celery, Claude Code, Gemini CLI
 - *API Integrations:* OpenAI, Claude API, Slack, Razorpay, WebEngage, Gmail
@@ -109,10 +109,10 @@ Python Backend Developer with 7+ years of experience. I apply spec-driven develo
 - RAG-based knowledge base for interview prep.
 
 #project(
-  name: link("https://enggfeed.mridulabs.dev")[SystemsFeed],
+  name: link("https://github.com/mridubhatnagar/humaraCart")[HumaraCart],
   dates: "2026",
 )
-- AI summaries, tags, and ELI5 for engineering blogs.
+- Shared household cart agent on WhatsApp for Swiggy Instamart, built for Swiggy Builders Club.
 
 == Education
 

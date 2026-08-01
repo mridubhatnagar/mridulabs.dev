@@ -3,8 +3,18 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 
 const projects = [
   {
-    name: "JobPilot",
-    date: "In progress",
+    name: "HumaraCart",
+    date: "July 2026",
+    description: "Shared household cart agent on WhatsApp for Swiggy Instamart -built for Swiggy Builders Club, coordinates orders across household members through a single unified cart synced via Instamart's MCP tools.",
+    tags: ["Python", "FastAPI", "LangGraph", "OpenAI GPT-4o", "Twilio", "WhatsApp Business API", "Swiggy Instamart MCP", "SQLite", "Docker", "DigitalOcean"],
+    live: null,
+    demo: "https://www.youtube.com/watch?v=I2IFtHbkLng",
+    github: "https://github.com/mridubhatnagar/humaraCart",
+    caseStudy: null,
+  },
+  {
+    name: "JobFinder",
+    date: "May 2026",
     description: "Personal job search system -finds relevant JDs across platforms, scores each against the provided resume, with a career-coach layer exposed via MCP so it plugs into Claude, ChatGPT, and other AI clients.",
     tags: ["Python", "MCP", "FastMCP", "Google Drive API", "Apify", "LLM", "Docker", "Google Cloud Run", "GitHub Actions", "Claude Code"],
     live: null,
@@ -54,6 +64,7 @@ const projects = [
               <span class="name">{p.name}</span>
             )}
             {p.live && <a class="meta-link" href={p.live} target="_blank" rel="noopener noreferrer">Live ↗</a>}
+            {p.demo && <a class="meta-link" href={p.demo} target="_blank" rel="noopener noreferrer">Demo ↗</a>}
             {p.caseStudy && <a class="meta-link" href={p.caseStudy}>Case Study →</a>}
           </div>
           <span class="date">{p.date}</span>

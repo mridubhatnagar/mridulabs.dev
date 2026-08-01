@@ -3,6 +3,16 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
 const projects = [
   {
+    name: "HumaraCart",
+    year: "2026",
+    description: "Shared household cart agent on WhatsApp for Swiggy Instamart -built for Swiggy Builders Club, keeps everyone's adds in one unified cart.",
+    live: null,
+    demo: "https://www.youtube.com/watch?v=I2IFtHbkLng",
+    github: "https://github.com/mridubhatnagar/humaraCart",
+    caseStudy: null,
+    challenges: null,
+  },
+  {
     name: "Prepit",
     year: "2026",
     description: "RAG-based knowledge base for interview prep -built end to end.",
@@ -13,17 +23,6 @@ const projects = [
       "Batch ingestion silently fell back to keyword search with no error -caught only via shell experiments.",
       "Deleting messages to manage context window cost meant losing training data -switched to session IDs instead.",
       "Hybrid search score can't measure semantic relevance -used near_vector distance separately for out-of-scope detection.",
-    ],
-  },
-  {
-    name: "SystemsFeed",
-    year: "2026",
-    description: "AI reading layer on top of engineering blogs -summaries, tags, prerequisites, and ELI5.",
-    live: "https://enggfeed.mridulabs.dev",
-    github: "https://github.com/mridubhatnagar/enggfeed",
-    caseStudy: null,
-    challenges: [
-      "Built tag normalization in layers: evals to measure quality, prompt refinement, semantic search for fuzzy duplicates, DB unique constraint for exact ones.",
     ],
   },
 ];
@@ -59,6 +58,7 @@ const projects = [
         )}
         <div class="links">
           {p.live && <a href={p.live} target="_blank" rel="noopener noreferrer">Live ↗</a>}
+          {p.demo && <a href={p.demo} target="_blank" rel="noopener noreferrer">Demo ↗</a>}
           {p.github && <a href={p.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>}
           {p.caseStudy && <a href={p.caseStudy}>Case Study →</a>}
         </div>

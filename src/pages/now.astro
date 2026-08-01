@@ -7,13 +7,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
     <section class="intro">
       <h1>Now</h1>
-      <p class="updated">Updated May 22, 2026</p>
+      <p class="updated">Updated August 1, 2026</p>
     </section>
 
-    <section>
-      <h2>Building</h2>
-      <p>JobPilot - a system for finding job applications relevant to the resume, along with a career advisor.</p>
-    </section>
 
     <section>
       <h2>Learning</h2>
@@ -42,6 +38,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <ul>
         <li><a href="https://learn.deeplearning.ai/certificates/9b11afeb-afe7-424a-9c1b-2f5dc0f26405?usp=sharing" target="_blank" rel="noopener noreferrer">Agentic AI ↗</a></li>
       </ul>
+      <p class="month-label">July</p>
+      <ul>
+        <li><a href="https://verify.skilljar.com/c/p3f79co5sfcw" target="_blank" rel="noopener noreferrer">Introduction to SubAgents ↗</a></li>
+      </ul>
     </section>
 
     <section>
@@ -61,6 +61,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
   section p:not(.month-label), section ul {
     margin: 0;
+  }
+
+  section p:not(.month-label) + p:not(.month-label) {
+    margin-top: 10px;
   }
 
   section ul {

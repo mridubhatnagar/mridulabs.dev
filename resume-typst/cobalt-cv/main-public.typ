@@ -127,7 +127,7 @@ Personal portfolio site at: #link("https://mridulabs.dev")[mridulabs.dev]
 
     #skill-category("Languages", ("Python", "JavaScript"))
     #skill-category("Frameworks", ("Flask", "FastAPI"))
-    #skill-category("Databases", ("PostgreSQL", "MySQL", "Redis", "Weaviate"))
+    #skill-category("Databases", ("PostgreSQL", "MySQL", "Google Datastore", "Redis", "Weaviate"))
     #skill-category("Cloud / Deployment", ("AWS EC2", "Google Cloud Pub/Sub", "Digital Ocean", "GitHub Actions"))
     #skill-category("Tools", ("Git", "Docker", "Celery", "Claude Code", "Gemini CLI"))
     #skill-category("API Integrations", ("OpenAI", "Claude API", "Slack", "Razorpay", "WebEngage", "Gmail"))
@@ -144,9 +144,9 @@ Personal portfolio site at: #link("https://mridulabs.dev")[mridulabs.dev]
     )
 
     #project-entry(
-      "SystemsFeed",
-      "https://enggfeed.mridulabs.dev",
-      [AI summaries, tags, and ELI5 for engineering blogs. #link("https://github.com/mridubhatnagar/enggfeed")[GitHub ↗]],
+      "HumaraCart",
+      "https://github.com/mridubhatnagar/humaraCart",
+      [Shared household cart agent on WhatsApp for Swiggy Instamart, built for Swiggy Builders Club. #link("https://www.youtube.com/watch?v=I2IFtHbkLng")[Demo ↗]],
     )
 
     #line(stroke: (dash: "dashed", paint: accent), length: 90%)
