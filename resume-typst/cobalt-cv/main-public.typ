@@ -83,8 +83,10 @@
   #resume-title()
   #set text(size: 9.5pt)
   #grid(
-    columns: (1fr, 1fr, 1fr),
+    columns: (auto, auto, auto, auto),
+    column-gutter: 1.2cm,
     align: center,
+    [ #fa-icon("globe", font: "Font Awesome 6 Free Solid") #link("https://mridulabs.dev")[mridulabs.dev] ],
     [ #fa-icon("envelope", font: "Font Awesome 6 Free Solid") #link("mailto:mridubhatnagar4@gmail.com")[mridubhatnagar4\@gmail.com] ],
     [ #fa-icon("github", font: "Font Awesome 6 Brands") #link("https://github.com/mridubhatnagar")[github.com/mridubhatnagar] ],
     [ #fa-icon("linkedin", font: "Font Awesome 6 Brands") #link("https://www.linkedin.com/in/mridu-bhatnagar-17703a92/")[linkedin/mridu-bhatnagar] ],
@@ -94,8 +96,7 @@
 #line(length: 100%, stroke: accent)
 
 #v(-0.4em)
-I am a Python Backend Developer with 7+ years of experience. I apply spec-driven development to AI systems and leverage contemporary agentic coding tools to amplify output. Looking forward to working at the intersection of product, engineering, and AI. \
-Personal portfolio site at: #link("https://mridulabs.dev")[mridulabs.dev]
+I am a Python Backend Developer with 7+ years of experience. I apply spec-driven development to AI systems and leverage contemporary agentic coding tools to amplify output. Looking forward to working at the intersection of product, engineering, and AI.
 #v(-0.4em)
 
 #line(length: 100%, stroke: accent)
@@ -139,23 +140,22 @@ Personal portfolio site at: #link("https://mridulabs.dev")[mridulabs.dev]
 
     #project-entry(
       "Prepit",
-      "https://prepit.mridulabs.dev",
+      "https://www.linkedin.com/posts/mridu-bhatnagar-17703a92_i-built-a-rag-based-tool-prepit-for-solving-ugcPost-7441717523613523968-iqYY/?utm_source=share&utm_medium=member_desktop&rcm=ACoAABOVF2sB-8Qo07SL6ZD79cHZv1ttYAcOOsQ",
       [RAG-based knowledge base for interview prep. #link("https://github.com/mridubhatnagar/prepwise")[GitHub ↗]],
     )
 
     #project-entry(
       "HumaraCart",
-      "https://github.com/mridubhatnagar/humaraCart",
-      [Shared household cart agent on WhatsApp for Swiggy Instamart, built for Swiggy Builders Club. #link("https://www.youtube.com/watch?v=I2IFtHbkLng")[Demo ↗]],
+      "https://www.youtube.com/watch?v=I2IFtHbkLng",
+      [Shared household cart agent on WhatsApp for Swiggy Instamart, built for Swiggy Builders Club. #link("https://github.com/mridubhatnagar/humaraCart")[GitHub ↗]],
     )
 
     #line(stroke: (dash: "dashed", paint: accent), length: 90%)
 
-    = #upper("Speaking & Content")
+    = #upper("Courses")
+    #v(0.3em)
 
-    - Courses on LinkedIn Learning
-    - Tutorials on Twilio blog and egghead.io
-    - Talks at PyData, EuroPython, PyLadies
+    - Authored a LinkedIn Learning course on Python Sets and Frozen Sets, later expanded with in-depth, hands-on exercises, reaching 6,799+ learners.
 
   ],
   [
@@ -232,6 +232,21 @@ Personal portfolio site at: #link("https://mridulabs.dev")[mridulabs.dev]
         [Built backend features for Kredily using Django REST Framework.],
       ),
     )
+
+    #v(-0.3em)
+    #line(length: 100%, stroke: accent)
+    #v(-0.3em)
+
+    = #upper("Conference Talks")
+    #v(0.3em)
+
+    #set list(spacing: 0.4em)
+    - "#link("https://www.youtube.com/watch?v=Gb6sN7VYKog")[Building a Bot for WhatsApp using Python and Flask]" at Women Who Code (Virtual), 2020 (5.3k+ views).
+    - "#link("https://www.youtube.com/watch?v=g5LNWqZw-yg")[Rest API Integration with Python]" at Women Who Code (Virtual), 2020 (4.2k+ views).
+    - "#link("https://www.youtube.com/watch?v=1hy6YwsVZaU")[Automating Data Pipeline using Apache Airflow]" at PyData Delhi 2019 (2.8k+ views).
+    - "#link("https://www.youtube.com/watch?v=UkUY6cVxlLY")[Object Internals in Python]" at EuroPython Conference (Virtual), 2020 (international conference).
+    - "#link("https://www.youtube.com/watch?v=c295s11XCVo&t=4080s")[Memory address in Python]" at Remote Python Pizza Conference (Berlin), 2021 (international conference).
+    - 4 additional talks at international Python community meetups.
 
   ],
 )

@@ -103,13 +103,22 @@ const projects = [
   <div class="content-speaking">
     <h2>Speaking & Content</h2>
     <dl class="stack">
-      <div>
+      <div class="conf-row">
         <dt>Conferences</dt>
-        <dd>PyData Delhi, EuroPython, PyLadies meetups</dd>
+        <dd>
+          <ul class="conf-list">
+            <li><a href="https://www.youtube.com/watch?v=Gb6sN7VYKog" target="_blank" rel="noopener noreferrer">Building a Bot for WhatsApp using Python and Flask ↗</a> at Women Who Code (Virtual), 2020 (5,388 views)</li>
+            <li><a href="https://www.youtube.com/watch?v=g5LNWqZw-yg" target="_blank" rel="noopener noreferrer">Rest API Integration with Python ↗</a> at Women Who Code (Virtual), 2020 (4,245 views)</li>
+            <li><a href="https://www.youtube.com/watch?v=1hy6YwsVZaU" target="_blank" rel="noopener noreferrer">Apache Airflow talk ↗</a> at PyData Delhi 2019 (2.8k+ views)</li>
+            <li><a href="https://www.youtube.com/watch?v=UkUY6cVxlLY" target="_blank" rel="noopener noreferrer">Object Internals in Python ↗</a> at EuroPython 2020 (international conference)</li>
+            <li><a href="https://www.youtube.com/watch?v=c295s11XCVo&t=4080s" target="_blank" rel="noopener noreferrer">Memory address in Python ↗</a> at Remote Python Pizza Conference (Berlin), 2021 (international conference)</li>
+            <li>+4 more talks at international Python community meetups</li>
+          </ul>
+        </dd>
       </div>
       <div>
         <dt>Content</dt>
-        <dd>LinkedIn Learning, Twilio, egghead.io</dd>
+        <dd>LinkedIn Learning (Sets & Frozen Sets, 6,799+ learners)</dd>
       </div>
     </dl>
   </div>
@@ -172,6 +181,25 @@ const projects = [
     margin: 0;
     font-size: 14px;
     color: var(--fg-muted);
+  }
+
+  .conf-row {
+    align-items: start !important;
+  }
+
+  .conf-list {
+    list-style: disc;
+    padding-left: 1.1rem;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .conf-list li {
+    font-size: 14px;
+    color: var(--fg-muted);
+    line-height: 1.5;
   }
 
   .projects {
