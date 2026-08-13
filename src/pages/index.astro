@@ -1,5 +1,10 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog"))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
 
 const projects = [
   {
@@ -30,6 +35,8 @@ const projects = [
 
 <BaseLayout>
   <p class="bio">Python backend developer with 7+ years of experience. Enthusiastic about building products and understanding how systems work. AI has enabled me to think beyond the code - across architecture, product, and execution - and develop a systems thinking mindset.</p>
+
+  <p class="calendly">Open to new roles and conversations. <a href="https://calendly.com/mridubhatnagar" target="_blank" rel="noopener noreferrer" class="stat">Book a call ↗</a></p>
 
   <div class="highlights">
     <h2>Work Highlights</h2>
@@ -65,6 +72,23 @@ const projects = [
       </li>
     ))}
   </ul>
+
+  <div class="writing">
+    <h2>Writing</h2>
+    <ul class="posts">
+      {posts.map((post) => (
+        <li>
+          <div class="row">
+            <a href={`/blog/${post.id}`}>{post.data.title}</a>
+            <span class="date">
+              {post.data.date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+            </span>
+          </div>
+        </li>
+      ))}
+    </ul>
+    <a href="/blog" class="view-all">View all →</a>
+  </div>
 
   <div class="tech-stack">
     <h2>Tech Stack</h2>
@@ -130,6 +154,12 @@ const projects = [
     margin: 0 0 24px;
   }
 
+  .calendly {
+    font-size: 13px;
+    color: var(--fg-muted);
+    margin: -14px 0 24px;
+  }
+
   .highlights {
     display: flex;
     flex-direction: column;
@@ -142,6 +172,46 @@ const projects = [
     flex-direction: column;
     gap: 0;
     margin: 16px 0 20px;
+  }
+
+  .writing {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 16px 0 20px;
+  }
+
+  .posts {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .posts .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0;
+  }
+
+  .posts a {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--fg-strong);
+  }
+
+  .posts .date {
+    font-size: 12px;
+    color: var(--fg-faint);
+  }
+
+  .view-all {
+    align-self: flex-start;
+    font-size: 12px;
+    color: var(--fg-faint);
   }
 
   .achievements {
