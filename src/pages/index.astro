@@ -34,10 +34,10 @@ const projects = [
   <div class="highlights">
     <h2>Work Highlights</h2>
     <ul class="achievements">
-      <li>Built JWT-based source verification using ES256 algorithm to secure cross-app access for 40,000+ students.</li>
-      <li>Built exam city edit module serving 37,000+ students across 3 programs, eliminating manual support team intervention.</li>
-      <li>Added Celery-based async processing to settlement service, enabling it to handle peak loads of 8,000+ customers.</li>
-      <li>Drove settlement success rate to 100% by reducing merchant escalations to zero and coordinating with Razorpay and other dependent internal tech teams.</li>
+      <li>Built JWT-based source verification using ES256 algorithm to secure cross-app access for <span class="stat">40,000+</span> students.</li>
+      <li>Built exam city edit module serving <span class="stat">37,000+</span> students across 3 programs, eliminating manual support team intervention.</li>
+      <li>Added Celery-based async processing to settlement service, enabling it to handle peak loads of <span class="stat">8,000+</span> customers.</li>
+      <li>Drove settlement success rate to <span class="stat">100%</span> by reducing merchant escalations to zero and coordinating with Razorpay and other dependent internal tech teams.</li>
     </ul>
   </div>
 
@@ -107,9 +107,9 @@ const projects = [
         <dt>Conferences</dt>
         <dd>
           <ul class="conf-list">
-            <li><a href="https://www.youtube.com/watch?v=Gb6sN7VYKog" target="_blank" rel="noopener noreferrer">Building a Bot for WhatsApp using Python and Flask ↗</a> at Women Who Code (Virtual), 2020 (5,388 views)</li>
-            <li><a href="https://www.youtube.com/watch?v=g5LNWqZw-yg" target="_blank" rel="noopener noreferrer">Rest API Integration with Python ↗</a> at Women Who Code (Virtual), 2020 (4,245 views)</li>
-            <li><a href="https://www.youtube.com/watch?v=1hy6YwsVZaU" target="_blank" rel="noopener noreferrer">Apache Airflow talk ↗</a> at PyData Delhi 2019 (2.8k+ views)</li>
+            <li><a href="https://www.youtube.com/watch?v=Gb6sN7VYKog" target="_blank" rel="noopener noreferrer">Building a Bot for WhatsApp using Python and Flask ↗</a> at Women Who Code (Virtual), 2020 (<span class="stat">5,388</span> views)</li>
+            <li><a href="https://www.youtube.com/watch?v=g5LNWqZw-yg" target="_blank" rel="noopener noreferrer">Rest API Integration with Python ↗</a> at Women Who Code (Virtual), 2020 (<span class="stat">4,245</span> views)</li>
+            <li><a href="https://www.youtube.com/watch?v=1hy6YwsVZaU" target="_blank" rel="noopener noreferrer">Apache Airflow talk ↗</a> at PyData Delhi 2019 (<span class="stat">2.8k+</span> views)</li>
             <li><a href="https://www.youtube.com/watch?v=UkUY6cVxlLY" target="_blank" rel="noopener noreferrer">Object Internals in Python ↗</a> at EuroPython 2020 (international conference)</li>
             <li><a href="https://www.youtube.com/watch?v=c295s11XCVo&t=4080s" target="_blank" rel="noopener noreferrer">Memory address in Python ↗</a> at Remote Python Pizza Conference (Berlin), 2021 (international conference)</li>
             <li>+4 more talks at international Python community meetups</li>
@@ -118,7 +118,7 @@ const projects = [
       </div>
       <div>
         <dt>Content</dt>
-        <dd>LinkedIn Learning (Sets & Frozen Sets, 6,799+ learners)</dd>
+        <dd><a href="https://www.linkedin.com/learning/python-data-structures-sets-and-frozen-sets-24926312" target="_blank" rel="noopener noreferrer">Sets & Frozen Sets ↗</a> (LinkedIn Learning, <span class="stat">6,799+</span> learners)</dd>
       </div>
     </dl>
   </div>
@@ -156,6 +156,11 @@ const projects = [
   .achievements li {
     font-size: 14px;
     color: var(--fg-muted);
+  }
+
+  .stat {
+    font-weight: 600;
+    color: var(--fg-strong);
   }
 
   .stack {

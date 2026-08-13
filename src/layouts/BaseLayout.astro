@@ -15,6 +15,16 @@ const { title = "Mridu" } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <!-- Google tag (gtag.js) -->
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-EFQ9RVJ2D1"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-EFQ9RVJ2D1');
+    </script>
+    <!-- Contentsquare tracking -->
+    <script is:inline async src="https://t.contentsquare.net/uxa/2d277abb155dd.js"></script>
     <!-- Prevent flash of wrong theme -->
     <script is:inline>
       (function () {
