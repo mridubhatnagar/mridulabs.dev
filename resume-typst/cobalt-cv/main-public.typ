@@ -132,7 +132,7 @@ I am a Python Backend Developer with 7+ years of experience. I apply spec-driven
     #skill-category("Cloud / Deployment", ("AWS EC2", "Google Cloud Pub/Sub", "Digital Ocean", "GitHub Actions"))
     #skill-category("Tools", ("Git", "Docker", "Celery", "Claude Code", "Gemini CLI"))
     #skill-category("API Integrations", ("OpenAI", "Claude API", "Slack", "Razorpay", "WebEngage", "Gmail"))
-    #skill-category("AI Engineering", ("LLM Applications", "Agents", "RAG Systems", "LangGraph"))
+    #skill-category("AI Engineering", ("LLM Applications", "Agents", "RAG Systems", "LangGraph", "MCP"))
 
     #line(stroke: (dash: "dashed", paint: accent), length: 90%)
 
@@ -147,7 +147,7 @@ I am a Python Backend Developer with 7+ years of experience. I apply spec-driven
     #project-entry(
       "HumaraCart",
       "https://www.youtube.com/watch?v=I2IFtHbkLng",
-      [Shared household cart agent on WhatsApp for Swiggy Instamart, built for Swiggy Builders Club. #link("https://github.com/mridubhatnagar/humaraCart")[GitHub ↗]],
+      [Shared household cart agent on WhatsApp built using Instamart's MCP server, for Swiggy Builders Club. #link("https://github.com/mridubhatnagar/humaraCart")[GitHub ↗]],
     )
 
     #line(stroke: (dash: "dashed", paint: accent), length: 90%)
@@ -155,7 +155,7 @@ I am a Python Backend Developer with 7+ years of experience. I apply spec-driven
     = #upper("Courses")
     #v(0.3em)
 
-    - Authored a LinkedIn Learning course on Python Sets and Frozen Sets, later expanded with in-depth, hands-on exercises, reaching 6,799+ learners.
+    Authored a LinkedIn Learning course on Python Sets and Frozen Sets, later expanded with in-depth, hands-on exercises, reaching 6,799+ learners.
 
   ],
   [
