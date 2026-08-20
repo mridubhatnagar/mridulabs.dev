@@ -126,6 +126,42 @@ const { Content } = await render(post);
     color: var(--fg-muted);
   }
 
+  .prose :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 16px;
+    font-size: 13px;
+  }
+
+  .prose :global(th),
+  .prose :global(td) {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .prose :global(th:first-child),
+  .prose :global(td:first-child) {
+    padding-left: 0;
+  }
+
+  .prose :global(th:not(:last-child)),
+  .prose :global(td:not(:last-child)) {
+    border-right: 1px solid var(--border);
+  }
+
+  .prose :global(th) {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--fg-faint);
+  }
+
+  .prose :global(td) {
+    color: var(--fg);
+  }
+
   .back {
     font-size: 13px;
     color: var(--fg-faint);
