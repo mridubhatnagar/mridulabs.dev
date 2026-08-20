@@ -55,7 +55,20 @@ The droplet has 1GB RAM. Six services running together wasn't quite enough, so I
 - Before swap: 934Mi/961Mi used, 26Mi available
 - After swap: 812Mi/961Mi used, 149Mi available (163Mi in swap)
 
-To find out where the swap was actually going, I had to cross-reference two things DO doesn't hand you together: `docker stats` for RAM per container, and a scan of every process's `VmSwap` from `/proc/<pid>/status`, mapped back to container names via `docker top`. Add RAM + swap per container and you get a real, if slightly conservative, picture of what each service costs. `VmSwap` only counts memory a process keeps to itself, so it misses shared memory like Postgres's internal cache. The real number is probably a bit higher than what I measured.
+To find out where the swap was actually going, I had to cross-reference two things DO doesn't hand you together:
+
+1. **RAM per container.** `docker stats` already shows this.
+2. **Swap per process.** Scan every process's `VmSwap` from `/proc/<pid>/status`:
+   ```
+   for pid in $(ps -eo pid=); do swap=$(awk '/VmSwap/{print $2}' /proc/$pid/status); [ "$swap" ] && echo "$swap  $(ps -p $pid -o comm=)"; done | sort -rn
+   ```
+3. **Map PIDs back to container names.** `docker top`, per container:
+   ```
+   for id in $(docker ps -q); do echo $(docker inspect --format '{{.Name}}' $id); docker top "$id" -o pid,comm; done
+   ```
+4. **Add RAM + swap, per container.** That gives a real, if slightly conservative, picture of what each service costs.
+
+`VmSwap` only counts memory a process keeps to itself, so it misses shared memory like Postgres's internal cache. The real number is probably a bit higher than what I measured.
 
 ## What It Cost
 
@@ -74,7 +87,7 @@ Here's where the talk's title comes from. I priced out what the same droplet wou
 | Transfer | 1TB bundled | 100GB free | 100GB free |
 | Cost | **$6.00/month** | $9.05 + $2.28 = **$11.33/month** | $16.35 + $2.28 = **$18.63/month** |
 
-Two things aren't apples to apples here. gp3 is AWS's general-purpose SSD, EBS's default volume type. And outbound transfer isn't equal either: DO bundles 1,000GB free per droplet, AWS gives only 100GB free per whole account, then charges $0.09/GB beyond that. Inbound is free on both. Going right-sized avoids the swap problem entirely, for roughly 1.6x the minimal AWS cost, still about 3x what DO charges flat.
+Two things aren't apples to apples here. gp3 is AWS's general-purpose SSD, EBS's default volume type. And outbound transfer isn't equal either: DO bundles 1,000GB free per droplet, AWS gives only 100GB free per whole account, then charges $0.09/GB beyond that. Inbound is free on both. Going right-sized avoids the swap problem entirely, for roughly **1.6x** the minimal AWS cost, still about **3x** what DO charges flat.
 
 ## Glossary
 
@@ -89,7 +102,7 @@ Two things aren't apples to apples here. gp3 is AWS's general-purpose SSD, EBS's
 ## Sources
 
 - [DigitalOcean droplet pricing](https://www.digitalocean.com/pricing/droplets)
-- [AWS EC2 + EBS pricing](https://calculator.aws), cross-checked against aws-pricing.com
+- [AWS EC2 + EBS pricing](https://calculator.aws), cross-checked against [aws-pricing.com](https://aws-pricing.com)
 - [EC2 root volume requirement for Nitro instances](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/RootDeviceStorage.html)
 - [AWS Free Tier structure](https://aws.amazon.com/free)
 - [Linux VmSwap accounting limitations](https://man7.org/linux/man-pages/man5/proc_pid_status.5.html)
