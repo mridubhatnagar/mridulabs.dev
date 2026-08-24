@@ -10,6 +10,10 @@ Given as a <a href="https://docs.google.com/presentation/d/1eCxIlt8fITcELrhaQE3m
 
 HumaraCart is a WhatsApp bot that lets a household share one Instamart cart. Anyone in the house can say "add milk" and it lands in a cart the account holder eventually checks out. I've written about <a href="/swiggy-builders-club-application" target="_blank" rel="noopener noreferrer">the idea and V1</a> before. This talk was about the parts V1 didn't cover: how the messaging layer actually works around a WhatsApp limitation, and how the agent talks to Instamart underneath.
 
+<div class="video-embed">
+<iframe src="https://www.youtube.com/embed/I2IFtHbkLng" title="HumaraCart demo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</div>
+
 ## WhatsApp Doesn't Support Group Bots
 
 What you'd expect: one WhatsApp group, everyone in it, talking to one bot together.
