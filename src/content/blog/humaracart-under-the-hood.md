@@ -109,9 +109,9 @@ A few things that were genuinely hard to get right, most of them only showing up
 
 ## Glossary
 
-**Node:** a single step in the graph. The `agent` node calls the LLM, the `tools` node calls Instamart's MCP tools, the `ask_human` node pauses for a person.
+**Node:** where the work happens in the graph, a function that runs at that step. The `agent` node calls the LLM, the `tools` node calls Instamart's MCP tools, the `ask_human` node pauses for a person.
 
-**Edge:** the connection that decides what runs next after a node finishes. Most of HumaraCart's edges are conditional, not fixed: the agent's own decision, or whether a tool call needs a human, determines which node fires next.
+**Edge:** routes to the next node based on what the previous node did. Most of HumaraCart's edges are conditional, not fixed: the agent's own decision, or whether a tool call needs a human, determines which node fires next.
 
 **Interrupt:** LangGraph's mechanism for pausing a run mid-graph and waiting on something outside the graph, in this case a person. `ask_human` is built on an interrupt: the graph's state is saved, control returns to the caller, and the graph resumes from that exact point once an answer comes back.
 
