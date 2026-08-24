@@ -27,6 +27,49 @@ const { Content } = await render(post);
     </div>
   </article>
   <a class="back" href="/blog">← Writing</a>
+  <script>
+    import mermaid from "mermaid";
+
+    function cssVar(name) {
+      return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    }
+
+    const diagrams = Array.from(document.querySelectorAll('pre[data-language="mermaid"]')).map((pre, i) => {
+      const source = pre.querySelector("code").innerText;
+      const el = document.createElement("div");
+      el.className = "mermaid";
+      el.id = `mermaid-diagram-${i}`;
+      pre.replaceWith(el);
+      return { el, source };
+    });
+
+    async function renderDiagrams() {
+      if (!diagrams.length) return;
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: "base",
+        themeVariables: {
+          background: "transparent",
+          primaryColor: cssVar("--border"),
+          primaryTextColor: cssVar("--fg-strong"),
+          primaryBorderColor: cssVar("--border-link"),
+          lineColor: cssVar("--fg-faint"),
+          secondaryColor: cssVar("--border"),
+          secondaryTextColor: cssVar("--fg-strong"),
+          tertiaryColor: cssVar("--border"),
+        },
+        flowchart: { curve: "linear" },
+      });
+      for (const [i, d] of diagrams.entries()) {
+        const resolved = d.source.replace(/var\((--[\w-]+)\)/g, (_, name) => cssVar(name));
+        const { svg } = await mermaid.render(`${d.el.id}-svg-${Date.now()}-${i}`, resolved);
+        d.el.innerHTML = svg;
+      }
+    }
+
+    await renderDiagrams();
+    window.addEventListener("themechange", renderDiagrams);
+  </script>
 </BaseLayout>
 
 <style>
@@ -119,6 +162,13 @@ const { Content } = await render(post);
     font-size: 13px;
   }
 
+  .prose :global(.mermaid) {
+    background: transparent;
+    padding: 0;
+    margin: 0 0 16px;
+    overflow-x: auto;
+  }
+
   .prose :global(blockquote) {
     border-left: 2px solid var(--border-link);
     margin: 0 0 16px;
@@ -131,23 +181,14 @@ const { Content } = await render(post);
     border-collapse: collapse;
     margin: 0 0 16px;
     font-size: 13px;
+    border: 1px solid var(--border);
   }
 
   .prose :global(th),
   .prose :global(td) {
     text-align: left;
     padding: 8px 12px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .prose :global(th:first-child),
-  .prose :global(td:first-child) {
-    padding-left: 0;
-  }
-
-  .prose :global(th:not(:last-child)),
-  .prose :global(td:not(:last-child)) {
-    border-right: 1px solid var(--border);
+    border: 1px solid var(--border);
   }
 
   .prose :global(th) {

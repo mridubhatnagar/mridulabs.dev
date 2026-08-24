@@ -54,6 +54,7 @@ const { title = "Mridu" } = Astro.props;
         const isDark = html.getAttribute("data-theme") === "dark";
         html.setAttribute("data-theme", isDark ? "light" : "dark");
         localStorage.setItem("theme", isDark ? "light" : "dark");
+        window.dispatchEvent(new Event("themechange"));
       });
     </script>
   </body>
