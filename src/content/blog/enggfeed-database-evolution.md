@@ -45,7 +45,7 @@ The `user` table was helping in tracking who the feedback was by. As a workaroun
 
 As features relying on the LLM were no longer gated, and articles were also aging out of the RSS feed's rolling window before an on-demand fetch could reach them, all LLM calls were moved to ingest time. Added the [`llm_usage` table](https://github.com/mridubhatnagar/enggfeed/blob/develop/alembic/versions/e5f6a7b8c9d0_add_llm_usage.py) for detailed cost analysis per blog, with fields `id`, `blog_id`, `call_type`, `provider`, `model`, `input_tokens`, `output_tokens`, `total_tokens`, `cost_usd`, `created_at`. `blog_id` is a foreign key referencing `blog.id`. Possible values of `call_type` are `tag_prerequisite_extraction`, `summary`, `simplify`, `tag_embedding`, `prerequisite_embedding`, `prerequisite_content`.
 
-Seven migrations in, the schema went from 11 tables covering auth, search, and every feature I could think of on day one, down to 10 tables that exist because something is actually being used. Here's the current schema:
+Seven migrations in: the `initial` migration created 11 tables covering auth, search, and every feature I could think of on day one. `user`, `allowed_users`, and `blog_chunk` were dropped along the way, and `feedback` and `llm_usage` were added later, landing at 10 tables today, all of them there because something is actually being used. Across the whole history, that's 13 distinct tables total, the 10 live ones plus the 3 dropped. Here's the current schema:
 
 <a href="/blog/enggfeed-schema-diagram.svg" target="_blank" rel="noopener noreferrer">
   <img src="/blog/enggfeed-schema-diagram.svg" alt="EnggFeed database schema, showing the 10 live tables" />
