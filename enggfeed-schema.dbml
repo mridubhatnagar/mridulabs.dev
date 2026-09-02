@@ -1,0 +1,177 @@
+// EnggFeed schema -- paste this whole file into dbdiagram.io (or any DBML-compatible tool)
+// 10 live tables + 3 dropped tables (user, allowed_users, blog_chunk), shown for the "started broad, cut down" story.
+// Field lists verified against alembic/versions/*.py and the current models.py files.
+
+Table blog_source {
+  id uuid [pk]
+  source text [not null]
+  rss_feed_link text [not null]
+  created_at timestamp [not null]
+
+  Note: 'One row per company RSS feed being tracked (e.g. Cloudflare, Discord). Source of what gets ingested.'
+}
+
+Table blog {
+  id uuid [pk]
+  guid text [not null, unique]
+  created_at timestamp [not null]
+  link text [not null]
+  title text [not null]
+  thumbnail text
+  word_count integer [not null]
+  published_at timestamp [not null]
+  blog_source_id uuid [not null]
+
+  Note: 'One row per ingested RSS item. `guid` is the RSS feed\'s own identifier, used only for ingest-time dedup -- `id` is the internal PK everything else references.'
+}
+Ref: blog.blog_source_id > blog_source.id
+
+Table summary {
+  id uuid [pk]
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+  blog_id uuid [not null]
+  content jsonb [not null]
+
+  Note: 'One summary per blog (app-enforced, not a DB constraint). `content` holds the LLM-generated summary JSON.'
+}
+Ref: summary.blog_id - blog.id
+
+Table simplify {
+  id uuid [pk]
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+  blog_id uuid [not null]
+  simplify text [not null]
+
+  Note: 'One ELI5 explanation per blog (app-enforced, not a DB constraint).'
+}
+Ref: simplify.blog_id - blog.id
+
+Table prerequisite {
+  id uuid [pk]
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+  topic_name text [not null, unique]
+  content jsonb
+  embedding vector [not null]
+
+  Note: '`topic_name` is unique -- a prerequisite topic (e.g. "Kafka") is generated once and reused across every blog that references it, not regenerated per blog.'
+}
+
+Table blog_prerequisite {
+  blog_id uuid [not null, pk]
+  prerequisite_id uuid [not null, pk]
+  created_at timestamp [not null]
+
+  Note: 'Join table for the many-to-many between blog and prerequisite.'
+}
+Ref: blog_prerequisite.blog_id > blog.id
+Ref: blog_prerequisite.prerequisite_id > prerequisite.id
+
+Table tag {
+  tag_id uuid [pk]
+  created_at timestamp [not null]
+  tag text [not null, unique]
+  embedding vector [not null]
+
+  Note: 'One row per unique tag (e.g. "kafka", "scaling"). `embedding` is used at ingest time to find similar existing tags via cosine similarity before inserting a new one.'
+}
+
+Table blog_tag {
+  blog_id uuid [not null]
+  tag_id uuid [not null]
+  created_at timestamp [not null]
+
+  indexes {
+    (blog_id, tag_id) [pk]
+  }
+
+  Note: 'Join table for the many-to-many between blog and tag.'
+}
+Ref: blog_tag.blog_id > blog.id
+Ref: blog_tag.tag_id > tag.tag_id
+
+Table feedback {
+  id uuid [pk]
+  blog_id uuid [not null]
+  type varchar [not null]
+  content text [not null]
+  name text
+  email text
+  created_at timestamp [not null]
+
+  Note: 'User-submitted correction/feedback on AI-generated content. `type` is one of: tag, prerequisite, summary, simplify. `name`/`email` are optional -- added after auth was dropped and `user_id` no longer existed.'
+}
+Ref: feedback.blog_id > blog.id
+
+Table llm_usage {
+  id uuid [pk]
+  blog_id uuid [not null]
+  call_type varchar [not null]
+  provider varchar [not null]
+  model varchar [not null]
+  input_tokens integer
+  output_tokens integer
+  total_tokens integer [not null]
+  cost_usd decimal [not null]
+  created_at timestamp [not null]
+
+  Note: 'Per-LLM-call cost tracking, added once every article started costing multiple LLM calls at ingest time. `call_type` is one of: tag_prerequisite_extraction, summary, simplify, tag_embedding, prerequisite_embedding, prerequisite_content.'
+}
+Ref: llm_usage.blog_id > blog.id
+
+// ---- Dropped tables (kept in the diagram to show the "started broad, cut down" story) ----
+
+Table user {
+  user_id uuid [pk]
+  google_auth_id text
+  name text
+  email text
+  profile_url text
+
+  Note: 'DROPPED in drop_auth. Google OAuth user record -- removed when auth was cut entirely.'
+}
+
+Table allowed_users {
+  id uuid [pk]
+  email text
+
+  Note: 'DROPPED in drop_allowed_users_table. Manual invite allowlist -- removed to open signup to any Google account (auth itself was dropped later).'
+}
+
+Table blog_chunk {
+  id uuid [pk]
+  blog_id uuid
+  chunk_text text
+  embedding vector
+  created_at timestamp
+
+  Note: 'DROPPED in drop_blog_chunk. Chunked-text vector store for full-text semantic search -- removed when search was cut in favor of tag/company filtering.'
+}
+Ref: blog_chunk.blog_id > blog.id
+
+TableGroup "Ingest" {
+  blog_source
+  blog
+}
+
+TableGroup "LLM-Generated Content" {
+  summary
+  simplify
+  prerequisite
+  blog_prerequisite
+  tag
+  blog_tag
+}
+
+TableGroup "Supporting" {
+  feedback
+  llm_usage
+}
+
+TableGroup "Dropped" {
+  user
+  allowed_users
+  blog_chunk
+}
