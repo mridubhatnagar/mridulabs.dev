@@ -2,6 +2,7 @@
 title: "What It Takes to Publish a LinkedIn Learning Course?"
 date: 2026-08-13
 description: "The process from ideation to publishing the course live"
+tags: ["LinkedIn Learning", "Public Speaking", "Career"]
 ---
 
 <div style="border-left: 2px solid var(--border-link); padding-left: 14px; margin: 0 0 24px; font-size: 13px; font-style: italic; color: var(--fg-faint);">

@@ -2,6 +2,7 @@
 title: "DO vs AWS: An AI Side Project's Cost Story"
 date: 2026-08-20
 description: "What it actually costs to run EnggFeed's whole AI stack on a $6/month droplet, and how that compares to the AWS equivalent."
+tags: ["DigitalOcean", "AWS", "Cloud Cost", "Docker", "FastAPI", "LLM"]
 ---
 
 <div style="border-left: 2px solid var(--border-link); padding-left: 14px; margin: 0 0 24px; font-size: 13px; font-style: italic; color: var(--fg-faint);">

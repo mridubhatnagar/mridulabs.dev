@@ -2,6 +2,7 @@
 title: "What Two Unexpected AWS Billing Alerts Taught Me"
 date: 2026-04-10
 description: "Two unexpected billing alerts from AWS, and what they forced me to learn."
+tags: ["AWS EC2", "Cloud Cost", "DevOps", "Docker"]
 ---
 
 Recently, I built a product called PrepIt from scratch and decided to deploy it on AWS. To learn how, I took an online course and did some searching on GPT. This is what it told me:

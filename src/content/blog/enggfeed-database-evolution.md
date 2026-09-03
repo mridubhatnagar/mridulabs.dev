@@ -2,6 +2,7 @@
 title: "RSS Meets LLM: Reviving Engineering Feed (Part 2)"
 date: 2026-09-02
 description: "Database Migrations done over the course of building EnggFeed"
+tags: ["Postgres", "Database Design", "Migrations", "EnggFeed"]
 ---
 
 > Part 2 of a 4-part series on how EnggFeed, an RSS + LLM engineering blog aggregator, is built. [Part 1](/blog/enggfeed-how-its-built) covered how it's built.

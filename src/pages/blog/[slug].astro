@@ -21,6 +21,11 @@ const { Content } = await render(post);
       <span class="date">
         {post.data.date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
       </span>
+      {post.data.tags?.length > 0 && (
+        <ul class="tags">
+          {post.data.tags.map((t) => <li>{t}</li>)}
+        </ul>
+      )}
     </header>
     <div class="prose">
       <Content />
@@ -97,6 +102,24 @@ const { Content } = await render(post);
   .date {
     font-size: 12px;
     color: var(--fg-faint);
+  }
+
+  .tags {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tags li {
+    font-size: 11px;
+    color: var(--fg-muted);
+    background: var(--border);
+    padding: 2px 8px;
+    border-radius: 4px;
+    line-height: 1.6;
   }
 
   .prose {

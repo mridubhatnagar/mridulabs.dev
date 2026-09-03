@@ -2,6 +2,7 @@
 title: "RSS Meets LLM: Reviving Engineering Feed (Part 1)"
 date: 2026-08-30
 description: "How EnggFeed is built"
+tags: ["EnggFeed", "RSS", "LLM", "FastAPI", "System Design"]
 ---
 
 <div style="border-left: 2px solid var(--border-link); padding-left: 14px; margin: 0 0 24px; font-size: 13px; font-style: italic; color: var(--fg-faint);">

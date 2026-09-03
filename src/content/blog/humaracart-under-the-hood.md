@@ -2,6 +2,7 @@
 title: "HumaraCart: Under the Hood"
 date: 2026-08-24
 description: "Coordination over WhatsApp, and how it actually talks to Instamart: the messaging layer, MCP, and the agent loop behind HumaraCart V2."
+tags: ["HumaraCart", "WhatsApp Business API", "MCP", "LangGraph", "LLM", "System Design"]
 ---
 
 <div style="border-left: 2px solid var(--border-link); padding-left: 14px; margin: 0 0 24px; font-size: 13px; font-style: italic; color: var(--fg-faint);">
