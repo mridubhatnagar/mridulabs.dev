@@ -65,11 +65,11 @@ Part 2 closed on one design choice from the very first migration mattering more 
 
 ## One Topic, Many Labels
 
-**Symptom:** The LLM never named the same underlying topic the same way twice. One article's "Kafka," another's "kafka streaming," a third's "Apache Kafka," three tags for one concept.
+**Issue:** The LLM never named the same underlying topic the same way twice. One article's "Kafka," another's "kafka streaming," a third's "Apache Kafka," three tags for one concept.
 
 **Root cause:** Tag and prerequisite names come out of a freeform LLM call, not a fixed vocabulary. Without normalization, every slightly different phrasing became its own row.
 
-**Fix:** Before inserting a candidate tag or prerequisite, normalize the string (lowercase, strip, collapse separators), embed it, and compare it against existing tags by cosine similarity. Above a threshold of 0.88, reuse the existing tag. Below it, insert a new one. The threshold itself wasn't guessed, it came from hand-labeling real candidate pairs and tightening the evaluation criteria until the score actually meant something, which moved agreement from 66% to 80%.
+**Fix:** Before inserting a candidate tag or prerequisite, normalize the string (lowercase, strip, collapse separators), embed it, and compare it against existing tags by cosine similarity. Above a threshold of 0.88, reuse the existing tag. Below it, insert a new one. The threshold itself wasn't guessed, real candidate pairs were labeled "merge" or "separate" in Braintrust, and the threshold was picked from that labeled data, tightening the evaluation criteria until the score actually meant something, which moved agreement from 66% to 80%.
 
 **Lesson:** When an LLM is the source of a label, treat "same concept, different words" as the default case, not the edge case, and validate any similarity threshold against real labeled examples rather than picking a number that feels reasonable.
 
@@ -84,6 +84,8 @@ No "it depends" answers, actual decisions made and why.
 **FastAPI `BackgroundTasks` vs. a real queue.** `BackgroundTasks` runs the job in the same process, no broker, no worker, no new failure modes to operate. The real cost is exactly what challenge #3 above accepted: the HTTP response can no longer tell you whether the job actually succeeded. A queue like Celery or RQ would fix that, at the cost of infrastructure that doesn't pay for itself when there's only one job type running once a day.
 
 **Sync vs. async, codebase-wide.** The app stays synchronous almost everywhere, a plain SQLAlchemy `Session`, `requests` for HTTP, `anthropic.Anthropic` and `openai.OpenAI`'s sync clients, and plain `def` route handlers, which FastAPI already runs in a threadpool. That gets real concurrency across requests without needing every dependency in the chain to be async-safe. The genuine cost shows up in the ingest job itself: fetching all 19 sources happens one at a time, not concurrently, since the same DB session is reused across the whole job and isn't safe to share across concurrent tasks, and the tag/prerequisite dedup check is a check-then-insert with no locking, running it concurrently risks two similar tags racing past the similarity check at once and both getting inserted.
+
+**One model for every call vs. model routing.** Tag/prerequisite extraction and Simplify both stay on Sonnet, extraction has to correctly read an article to name the right tags and prerequisites, and Simplify has to restructure a technical article into an ELI5 explanation, both need real reasoning. Summary moved to Haiku, condensing an article into a short summary and key points doesn't need the same reasoning depth, and Haiku is a fraction of the cost, $1/$5 per million input/output tokens versus Sonnet's $3/$15. The cost of routing by call type is exactly that: one more thing to get right per call, route to the cheaper model where it's safe and you save real money, route wrong and quality drops somewhere a cost dashboard won't show you.
 
 > **Coming up in Part 4:** building a real Postman collection against the live API, and why it's structured the way it is.
 
