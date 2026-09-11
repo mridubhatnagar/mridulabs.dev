@@ -73,14 +73,16 @@ Four challenge write-ups, each as Symptom → Root cause → Fix → Lesson (con
 1. Tags silently empty for signed-in users — `blog.id` was the RSS `guid`, format varied by feed, broke the join. Cross-links back to Part 2's schema section.
 2. RSS rolling-window 502s — summary/simplify fetched article content on-demand from the *live* feed, which only holds a rolling window; articles aged out and became permanently unreachable. Fixed by generating eagerly at ingest instead.
 3. GitHub Actions reporting `504` while ingest had actually succeeded — synchronous endpoint colliding with the reverse-proxy timeout; decoupled via FastAPI `BackgroundTasks`, with the tradeoff that Actions' pass/fail no longer reflects real success (Sentry is now the source of truth).
-4. "One topic, many labels" — LLM tag/prerequisite extraction never named the same concept the same way twice. Fixed via embedding + cosine-similarity normalization (0.88 threshold), tuned by hand-labeling real candidate pairs through an eval — moved agreement from 66% to 80% (deck slides 6-7).
+4. New blogs sorted by the wrong clock — feed listing sorted by `published_at` (the source's own stamped date), so a blog brand new to EnggFeed could rank behind older ingests that simply carried a later publish date. Fixed by sorting on `created_at` (EnggFeed's own ingest timestamp) instead.
+5. Tier reflects the feed, not the article — content tier (word count) is computed from `<content:encoded>` when the feed provides it, else the short `<description>` teaser, never from the real article at its source URL. Accepted as a tradeoff, not fixed, since scraping the article URL as a fallback would break the copyright constraint from Part 1.
+6. "One topic, many labels" — LLM tag/prerequisite extraction never named the same concept the same way twice. Fixed via embedding + cosine-similarity normalization (0.88 threshold), tuned by hand-labeling real candidate pairs through an eval — moved agreement from 66% to 80% (deck slides 6-7, verified directly against the pptx).
 
 Closing `## TL;DR: Tradeoffs`, framed as "no it depends" answers:
 - Pay-per-read vs. pay-at-ingest for LLM calls (real numbers from deck slide 8 / `decided_next_steps.md` #1)
 - pgvector vs. Qdrant for the vector store (`docs/tech_decisions.md`)
 - FastAPI `BackgroundTasks` vs. a Celery/RQ queue for async ingest
+- Sync vs. async, codebase-wide: the app stays synchronous almost everywhere (sync SQLAlchemy engine/`Session`, `requests` for HTTP, plain `def` route handlers, which FastAPI already runs in a threadpool) rather than adopting `async def` + an async DB driver + an async HTTP client throughout, simpler to write and reason about, at the cost of not getting event-loop-level I/O concurrency. The one place this got stress-tested was `/ingest`: kept as sync code, but decoupled from the request via FastAPI `BackgroundTasks` instead of converting the endpoint to real `async def`, which is what caused the pass/fail signal to decouple from actual success (challenge #3's 504)
 - Removing auth entirely, reframed as a tradeoff (one fewer moving part vs. no per-user anything)
-- Staying on GitHub Actions cron vs. AWS EventBridge Scheduler (`decided_next_steps.md` #6)
 
 Series nav line at the end pointing forward to Part 4.
 
