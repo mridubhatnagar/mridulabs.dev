@@ -1,5 +1,5 @@
 ---
-title: "RSS Meets LLM: Reviving Engineering Feed (Part 2)"
+title: "RSS Meets LLM: Database Schema Evolution (Part 2)"
 date: 2026-09-02
 description: "Database Migrations done over the course of building EnggFeed"
 tags: ["Postgres", "Database Design", "Migrations", "EnggFeed"]

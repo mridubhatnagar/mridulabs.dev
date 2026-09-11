@@ -1,5 +1,5 @@
 ---
-title: "RSS Meets LLM: Reviving Engineering Feed (Part 3)"
+title: "RSS Meets LLM: Challenges and Tradeoffs (Part 3)"
 date: 2026-09-11
 description: "Real production bugs in EnggFeed, and the tradeoffs that came out of fixing them"
 tags: ["EnggFeed", "Debugging", "System Design", "Tradeoffs"]

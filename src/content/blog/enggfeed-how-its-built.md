@@ -1,5 +1,5 @@
 ---
-title: "RSS Meets LLM: Reviving Engineering Feed (Part 1)"
+title: "RSS Meets LLM: How EnggFeed Is Built (Part 1)"
 date: 2026-08-30
 description: "How EnggFeed is built"
 tags: ["EnggFeed", "RSS", "LLM", "FastAPI", "System Design"]
