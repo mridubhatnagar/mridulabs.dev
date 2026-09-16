@@ -3,6 +3,7 @@ title: "RSS Meets LLM: Challenges and Tradeoffs (Part 3)"
 date: 2026-09-11
 description: "Real production bugs in EnggFeed, and the tradeoffs that came out of fixing them"
 tags: ["EnggFeed", "Debugging", "System Design", "Tradeoffs"]
+toc: true
 ---
 
 > Part 3 of a 4-part series on how EnggFeed, an RSS + LLM engineering blog aggregator, is built. [Part 1](/blog/enggfeed-how-its-built) covered how it's built, [Part 2](/blog/enggfeed-database-evolution) covered the database schema's evolution.

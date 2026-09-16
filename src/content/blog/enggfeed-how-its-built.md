@@ -3,6 +3,7 @@ title: "RSS Meets LLM: How EnggFeed Is Built (Part 1)"
 date: 2026-08-30
 description: "How EnggFeed is built"
 tags: ["EnggFeed", "RSS", "LLM", "FastAPI", "System Design"]
+toc: true
 ---
 
 <div style="border-left: 2px solid var(--border-link); padding-left: 14px; margin: 0 0 24px; font-size: 13px; font-style: italic; color: var(--fg-faint);">
@@ -10,6 +11,8 @@ Given as a <a href="https://docs.google.com/presentation/d/1XXvdP4CADNGEt_O4Uhi9
 </div>
 
 *Part 1 of a 4-part series on how EnggFeed, an RSS + LLM engineering blog aggregator, is built.*
+
+<!-- toc -->
 
 [EnggFeed](https://enggfeed.mridulabs.dev) stands for Engineering Feed, RSS meets LLM, reviving the engineering feed.
 RSS stands for Really Simple Syndication, an age-old tech. Started somewhere around the year 1999.

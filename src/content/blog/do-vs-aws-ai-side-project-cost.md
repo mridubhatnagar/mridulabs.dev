@@ -3,6 +3,7 @@ title: "DO vs AWS: An AI Side Project's Cost Story"
 date: 2026-08-20
 description: "What it actually costs to run EnggFeed's whole AI stack on a $6/month droplet, and how that compares to the AWS equivalent."
 tags: ["DigitalOcean", "AWS", "Cloud Cost", "Docker", "FastAPI", "LLM"]
+toc: true
 ---
 
 <div style="border-left: 2px solid var(--border-link); padding-left: 14px; margin: 0 0 24px; font-size: 13px; font-style: italic; color: var(--fg-faint);">
@@ -10,6 +11,8 @@ Given as a <a href="https://docs.google.com/presentation/d/1-SePNVvO5nIu50pWhygC
 </div>
 
 $6. That's what it costs to run <a href="https://enggfeed.mridulabs.dev" target="_blank" rel="noopener noreferrer">EnggFeed</a>'s entire stack for a month, on one DigitalOcean droplet. I gave a <a href="https://docs.google.com/presentation/d/1-SePNVvO5nIu50pWhygCUcf_N_FYQDE7/edit?usp=sharing&ouid=101927937821898304665&rtpof=true&sd=true" target="_blank" rel="noopener noreferrer">talk</a> on how I got to that number, and what the same setup would cost on AWS. Here's the writeup.
+
+<!-- toc -->
 
 ![EnggFeed, signed in, showing engineering blog posts with AI-generated summaries and prerequisites](/blog/enggfeed-app.png)
 *EnggFeed, running locally on real ingested data.*
@@ -100,7 +103,7 @@ Two things aren't apples to apples here. gp3 is AWS's general-purpose SSD, EBS's
 
 **Transfer:** how much data can leave the machine before you get charged extra. Only outbound traffic is metered, inbound is free. Bundled generously by DO, metered more tightly by AWS past the free allowance.
 
-## Sources
+## Resources
 
 - [DigitalOcean droplet pricing](https://www.digitalocean.com/pricing/droplets)
 - [AWS EC2 + EBS pricing](https://calculator.aws), cross-checked against [aws-pricing.com](https://aws-pricing.com)

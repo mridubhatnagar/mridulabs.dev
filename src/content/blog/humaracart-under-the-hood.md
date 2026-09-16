@@ -3,6 +3,7 @@ title: "HumaraCart: Under the Hood"
 date: 2026-08-24
 description: "Coordination over WhatsApp, and how it actually talks to Instamart: the messaging layer, MCP, and the agent loop behind HumaraCart V2."
 tags: ["HumaraCart", "WhatsApp Business API", "MCP", "LangGraph", "LLM", "System Design"]
+toc: true
 ---
 
 <div style="border-left: 2px solid var(--border-link); padding-left: 14px; margin: 0 0 24px; font-size: 13px; font-style: italic; color: var(--fg-faint);">
@@ -10,6 +11,8 @@ Given as a <a href="https://docs.google.com/presentation/d/1eCxIlt8fITcELrhaQE3m
 </div>
 
 HumaraCart is a WhatsApp bot that lets a household share one Instamart cart. Anyone in the house can say "add milk" and it lands in a cart the account holder eventually checks out. I've written about <a href="/swiggy-builders-club-application" target="_blank" rel="noopener noreferrer">the idea and V1</a> before. This talk was about the parts V1 didn't cover: how the messaging layer actually works around a WhatsApp limitation, and how the agent talks to Instamart underneath.
+
+<!-- toc -->
 
 <div class="video-embed">
 <iframe src="https://www.youtube.com/embed/I2IFtHbkLng" title="HumaraCart demo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>

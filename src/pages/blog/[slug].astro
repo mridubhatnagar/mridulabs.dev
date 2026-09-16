@@ -122,6 +122,46 @@ const { Content } = await render(post);
     line-height: 1.6;
   }
 
+  .prose :global(.toc) {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 0 0 24px;
+  }
+
+  .prose :global(.toc-label) {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--fg-faint);
+    margin-bottom: 8px;
+  }
+
+  .prose :global(.toc ul) {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .prose :global(.toc li) {
+    margin-bottom: 0;
+  }
+
+  .prose :global(.toc a) {
+    font-size: 13px;
+    color: var(--fg-muted);
+    border-bottom: none;
+  }
+
+  .prose :global(.toc a:hover) {
+    color: var(--fg-strong);
+  }
+
   .prose {
     color: var(--fg);
     line-height: 1.75;

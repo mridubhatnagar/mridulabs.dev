@@ -3,6 +3,7 @@ title: "I Thought Netlify Was Free, Until My Site Was Taken Down"
 date: 2026-04-10
 description: "Netlify took my site down. Here is what happened."
 tags: ["Netlify", "Deployment", "Cloud Cost"]
+toc: true
 ---
 
 <!-- Draft your content below. I'll refine it once you share. -->

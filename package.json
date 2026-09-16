@@ -13,11 +13,17 @@
     "resume": "typst compile resume-typst/cobalt-cv/main.typ resume-typst/cobalt-cv/mridu-resume.pdf",
     "resume:public": "typst compile resume-typst/cobalt-cv/main-public.typ public/mridu-bhatnagar-resume.pdf",
     "resume:ats": "typst compile resume-typst/cobalt-cv/main-ats.typ resume-typst/cobalt-cv/mridu-resume-ats.pdf",
-    "resume:ats-public": "typst compile resume-typst/cobalt-cv/main-ats-public.typ public/mridu-bhatnagar-resume-ats.pdf"
+    "resume:ats-public": "typst compile resume-typst/cobalt-cv/main-ats-public.typ public/mridu-bhatnagar-resume-ats.pdf",
+    "lint:md": "markdownlint-cli2"
   },
   "dependencies": {
     "astro": "^6.0.7",
     "github-markdown-css": "^5.9.0",
     "mermaid": "^11.13.0"
+  },
+  "devDependencies": {
+    "github-slugger": "^2.0.0",
+    "markdownlint-cli2": "^0.23.2",
+    "unist-util-visit": "^5.1.0"
   }
 }

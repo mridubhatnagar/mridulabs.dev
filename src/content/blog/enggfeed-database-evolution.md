@@ -3,15 +3,20 @@ title: "RSS Meets LLM: Database Schema Evolution (Part 2)"
 date: 2026-09-02
 description: "Database Migrations done over the course of building EnggFeed"
 tags: ["Postgres", "Database Design", "Migrations", "EnggFeed"]
+toc: true
 ---
 
 > Part 2 of a 4-part series on how EnggFeed, an RSS + LLM engineering blog aggregator, is built. [Part 1](/blog/enggfeed-how-its-built) covered how it's built.
+
+<!-- toc -->
 
 <div class="video-embed">
 <iframe src="https://www.loom.com/embed/32201bf5a1ca4a348ad16acfc257be8f" title="EnggFeed database schema overview" allowfullscreen></iframe>
 </div>
 
 *Note: the video above shows all 13 tables together, the 10 live ones plus the 3 that were dropped along the way (`user`, `allowed_users`, `blog_chunk`). This isn't the schema at any single point in time, it's the full picture. Later migrations changed things from there, walked through below.*
+
+## Initial Commit Details
 
 While I was ideating on building enggfeed, the core premise was to build an engineering systems blog aggregator that runs on top
 of RSS feeds. However, as the core involved making direct LLM calls, I decided to have a sign up with Google feature. Without Sign Up,
@@ -32,6 +37,8 @@ Whenever there is a many-to-many relationship between 2 tables, as per database 
 Similarly, one blog can have multiple tags, and a tag can be present on multiple blogs. This is a many-to-many relationship. Created an intermediary table, `blog_tag`. `blog_tag` stores `blog_id`, `tag_id`, both foreign keys, referencing `blog.id` and `tag.tag_id` respectively, together forming the composite primary key. [Initial migration](https://github.com/mridubhatnagar/enggfeed/blob/develop/alembic/versions/9770442d8622_initial.py) contained all these core tables. The `tag` table has
 `tag_id`, `created_at`, `tag`, `embedding`.
 
+## What Changed After Launch
+
 On thinking and iterating further from a user's point of view, I realized that once blogs are aggregated on a platform, it is no longer a search problem. Given blogs from many companies, no one knows the blog titles beforehand, so what would they even type into a search box? It is a discovery problem instead. Due to this, in the [next migration](https://github.com/mridubhatnagar/enggfeed/blob/develop/alembic/versions/a1b2c3d4e5f6_drop_blog_chunk.py) `blog_chunk` table was dropped. 
 
 As summary, simplify, tags, prerequisite, prerequisite_content are all LLM-dependent, there is always a likelihood of hallucination. To get human review on the AI generation, I decided to provide a feedback form. Later, this can also help improve the quality further. Due to this, the `feedback` table was added in the [next migration](https://github.com/mridubhatnagar/enggfeed/blob/develop/alembic/versions/bb8590add1d0_add_feedback_table.py). `Feedback` has `id`, `blog_id`, `user_id`, `type`, `content`, `created_at`. `blog_id` is a foreign key referencing `blog.id`, and at this point `user_id` was also a foreign key referencing `user.user_id`. Possible values of `type` are `tag`, `prerequisite`, `summary`, `simplify`. `type` is an enum.
@@ -47,6 +54,8 @@ The `user` table was helping in tracking who the feedback was by. As a workaroun
 As features relying on the LLM were no longer gated, and articles were also aging out of the RSS feed's rolling window before an on-demand fetch could reach them, all LLM calls were moved to ingest time. Added the [`llm_usage` table](https://github.com/mridubhatnagar/enggfeed/blob/develop/alembic/versions/e5f6a7b8c9d0_add_llm_usage.py) for detailed cost analysis per blog, with fields `id`, `blog_id`, `call_type`, `provider`, `model`, `input_tokens`, `output_tokens`, `total_tokens`, `cost_usd`, `created_at`. `blog_id` is a foreign key referencing `blog.id`. Possible values of `call_type` are `tag_prerequisite_extraction`, `summary`, `simplify`, `tag_embedding`, `prerequisite_embedding`, `prerequisite_content`.
 
 Seven migrations in: the `initial` migration created 11 tables covering auth, search, and every feature I could think of on day one. `user`, `allowed_users`, and `blog_chunk` were dropped along the way, and `feedback` and `llm_usage` were added later, landing at 10 tables today, all of them there because something is actually being used. Across the whole history, that's 13 distinct tables total, the 10 live ones plus the 3 dropped. Here's the current schema:
+
+## The Schema Today
 
 <a href="/blog/enggfeed-schema-diagram.svg" target="_blank" rel="noopener noreferrer">
   <img src="/blog/enggfeed-schema-diagram.svg" alt="EnggFeed database schema, showing the 10 live tables" />
