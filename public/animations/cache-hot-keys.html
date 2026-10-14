@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hot Keys Animation</title>
+<style>
+  :root {
+    --bg: #ECF2F7; --card: #DFE9F1; --teal: #0E9C8C; --indigo: #6366F1;
+    --dark: #111827; --muted: #546274; --red: #DC2626; --amber: #D97706;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--dark);
+    font-family: Arial, Helvetica, sans-serif; }
+  #app { max-width: 1280px; margin: 0 auto; padding: 24px 16px 16px; min-height: 100%;
+    display: flex; flex-direction: column; }
+  .eyebrow { color: var(--teal); font-weight: 700; font-size: 16px; letter-spacing: .02em; }
+  h1 { margin: 6px 0 8px; font-size: 38px; line-height: 1.15; }
+  .sub { color: var(--muted); font-size: 20px; line-height: 1.4; min-height: 56px; max-width: 1000px; }
+  canvas { width: 100%; height: auto; display: block; margin-top: 8px; }
+  .bar { display: flex; align-items: center; gap: 16px; margin-top: 12px; flex-wrap: wrap; }
+  button { font: inherit; font-weight: 700; font-size: 16px; padding: 10px 18px; border-radius: 10px;
+    border: 0; background: var(--card); color: var(--dark); cursor: pointer; }
+  button.primary { background: var(--teal); color: #fff; }
+  button:disabled { opacity: .4; cursor: default; }
+  .dots { display: flex; gap: 8px; }
+  .dots i { width: 12px; height: 12px; border-radius: 50%; background: var(--card); display: block; }
+  .dots i.on { background: var(--teal); }
+  .grow { flex: 1; }
+  .note { color: var(--muted); font-size: 14px; }
+  .slider { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 15px; }
+  input[type=range] { width: 180px; accent-color: var(--indigo); }
+  #app.titlemode { justify-content: center; padding-bottom: 12vh; }
+  #app.titlemode h1 { font-size: 72px; }
+  #app.titlemode .sub { font-size: 24px; }
+  #app.titlemode canvas { display: none; }
+  [hidden] { display: none !important; }
+  #take { margin-top: 20px; }
+  #take .row { display: grid; grid-template-columns: 1.1fr 1.5fr 1.7fr; gap: 24px; align-items: center;
+    padding: 20px 24px; margin-top: 12px; background: var(--card); border-radius: 14px; font-size: 20px; line-height: 1.35; }
+  #take .row.head { background: transparent; padding: 0 24px; margin-top: 0; color: var(--teal);
+    font-size: 14px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+  #take .row span:nth-child(1), #take .row span:nth-child(3) { font-weight: 700; }
+  #take .row.head span { font-weight: 700; }
+  #take .row:not(.head) span:nth-child(2) { color: var(--muted); }
+  #app.takemode canvas { display: none; }
+  @media (max-width: 640px) { #take .row { grid-template-columns: 1fr; gap: 6px; font-size: 17px; } #take .row.head { display: none; } }
+  @media (max-width: 640px) { h1 { font-size: 28px; } .sub { font-size: 17px; } }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="eyebrow" id="eyebrow"></div>
+  <h1 id="title"></h1>
+  <div class="sub" id="sub"></div>
+  <canvas id="c" width="1200" height="460"></canvas>
+  <div id="take" hidden>
+    <div class="row head"><span>Fix</span><span>What it does</span><span>Trade-off</span></div>
+    <div class="row"><span>Replicate the key</span><span>Spreads the reads across the nodes</span><span>Copies can disagree for a moment</span></div>
+    <div class="row"><span>Keep it in app memory</span><span>Answers most reads in the app, so they never reach the node</span><span>The value can be a second or two old</span></div>
+    <div class="row"><span>Cap the reads for the key</span><span>Limits how many reads per second reach the node</span><span>Reads over the limit are held back, and what they get is a design choice</span></div>
+  </div>
+  <div class="bar">
+    <button id="prev">&larr; Back</button>
+    <button id="next" class="primary">Next &rarr;</button>
+    <div class="dots" id="dots"></div>
+    <div class="slider" id="sliderBox">
+      <label for="hot">Reads on the viral post</label>
+      <input type="range" id="hot" min="50" max="95" step="5" value="80">
+      <span id="hotVal">80%</span>
+    </div>
+    <div class="grow"></div>
+    <div class="note">Illustration, not a measurement. Arbitrary units.</div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var COL = { teal: "#0E9C8C", indigo: "#6366F1", dark: "#111827", muted: "#546274",
+              card: "#DFE9F1", bg: "#ECF2F7", red: "#DC2626", amber: "#D97706", white: "#FFFFFF" };
+  var SCENES = [
+    { eye: "Normal day", title: "Keys are spread across nodes",
+      sub: "Each key lives on one node, chosen by its hash. Requests spread out evenly." },
+    { eye: "A post goes viral", title: "One key gets most of the reads",
+      sub: "post:42 lives on Node 2, so most requests go to that one node. The other nodes are mostly idle." },
+    { eye: "Collateral damage", title: "Other keys on that node suffer too",
+      sub: "Reads for the other keys on Node 2 wait behind the viral ones. The cluster has spare capacity, just not on this node." },
+    { eye: "The fix", title: "Replicate the hot key",
+      sub: "Keep a copy on every node and read a random copy. The same traffic now spreads out." },
+    { eye: "The cost", title: "Writes must reach every copy",
+      sub: "An update has to be written to all the copies, or readers see different values." },
+    { eye: "Caching", title: "Hot Keys",
+      sub: "One popular key can overload one cache node. Picture a social app where one post goes viral." },
+    { eye: "Another fix", title: "Keep it in the app's memory",
+      sub: "Each app server holds the hot value for a moment. Most reads are answered there and never reach the node." },
+    { eye: "The cost", title: "The value can be old",
+      sub: "Each server refreshes on its own schedule. After an edit, one server can show the new value while another still shows the old one." },
+    { eye: "A third fix", title: "Cap the reads that reach the node",
+      sub: "Only a fixed number of reads per second for this key may reach the node. What happens to the rest is a design choice." },
+    { eye: "Takeaway", title: "No free fix", sub: "Pick the trade-off you can afford." }
+  ];
+  var TITLE = 5, LOCAL = 6, STALE = 7, LIMIT = 8, TAKE = 9, LOCAL_TTL = 2000, LIMIT_RATE = 4;
+  function replicated() { return scene === 3 || scene === 4; }
+
+  var canvas = document.getElementById("c");
+  var ctx = canvas.getContext("2d");
+  var LW = 1200, LH = 460;
+  var dpr = Math.max(1, window.devicePixelRatio || 1);
+  canvas.width = LW * dpr; canvas.height = LH * dpr;
+  ctx.scale(dpr, dpr);
+
+  var APP = { x: 20, y: 160, w: 190, h: 140 };
+  var NODES = [0, 1, 2].map(function (i) { return { x: 760, y: 10 + i * 150, w: 420, h: 130 }; });
+  var COLD = [["post:1", "post:2", "post:3"], ["post:4", "post:5", "post:6"], ["post:7", "post:8", "post:9"]];
+  var VIRAL = "post:42";
+  var TOTAL_RATE = 14;   // requests per second, all users
+  var CAP = 8;           // requests per second one node can serve
+
+  var scene = 0, pos = 0, hotShare = 0.8;
+  var h = (location.hash || "").replace("#", ""), warm = /w$/.test(h);
+  h = h.replace(/w$/, "");
+  var PARTS = { problem: [0, 1, 2], fix: [3, 4], local: [6, 7], limit: [8] };
+  var SEQ = PARTS[h] || [TITLE, 0, 1, 2, 3, 4, LOCAL, STALE, LIMIT, TAKE];
+  var dots = [], arrivals = [[], [], []], served = [0, 0, 0];
+  var spawnAcc = 0, writeAcc = 0, last = performance.now(), T = 0;
+  var sceneStart = 0, localFresh = -1, absorbed = 0, flashes = [];
+  var tokens = LIMIT_RATE, overCount = 0, totalReads = 0;
+
+  function appOut() { return { x: APP.x + APP.w, y: APP.y + APP.h / 2 }; }
+  function nodeIn(i) { return { x: NODES[i].x, y: NODES[i].y + NODES[i].h / 2 }; }
+
+  function load(i, now) {
+    var a = arrivals[i];
+    while (a.length && now - a[0] > 3000) a.shift();
+    return (a.length / 3) / CAP;
+  }
+
+  function spawn(node, kind, color, now) {
+    var l = load(node, now);
+    var dur = 650 * (1 + Math.max(0, l - 0.8) * 2.5);
+    dots.push({ node: node, kind: kind, color: color, t: 0, dur: Math.min(dur, 2600) });
+  }
+
+  function pickRequest(now) {
+    var hot = scene >= 1 && Math.random() < hotShare;
+    if (scene === LIMIT) totalReads++;
+    if (hot) {
+      if (scene === LIMIT) {
+        if (tokens < 1) {
+          overCount++;
+          dots.push({ node: 1, kind: "over", color: COL.muted, t: 0, dur: 900 });
+          return;
+        }
+        tokens -= 1;
+      }
+      if (scene === LOCAL && localFresh > now) {
+        dots.push({ node: 1, kind: "absorb", color: COL.indigo, t: 0, dur: 450 });
+        return;
+      }
+      if (scene === LOCAL) localFresh = now + LOCAL_TTL;
+      var n = replicated() ? Math.floor(Math.random() * 3) : 1;
+      spawn(n, "hot", COL.indigo, now);
+    } else {
+      var idx = Math.floor(Math.random() * 9), node = Math.floor(idx / 3);
+      var slow = scene === 2 && node === 1 && load(1, now) > 1;
+      spawn(node, "cold", slow ? COL.amber : COL.teal, now);
+    }
+  }
+
+  function setScene(p) {
+    pos = Math.max(0, Math.min(SEQ.length - 1, p));
+    scene = SEQ[pos];
+    dots = []; arrivals = [[], [], []]; served = [0, 0, 0]; spawnAcc = 0; writeAcc = 0;
+    sceneStart = T; localFresh = -1; absorbed = 0; flashes = [];
+    tokens = LIMIT_RATE; overCount = 0; totalReads = 0;
+    document.getElementById("eyebrow").textContent = SCENES[scene].eye;
+    document.getElementById("title").textContent = SCENES[scene].title;
+    document.getElementById("sub").textContent = SCENES[scene].sub;
+    document.getElementById("prev").disabled = pos === 0;
+    document.getElementById("next").disabled = pos === SEQ.length - 1;
+    document.getElementById("sliderBox").style.visibility = (scene === 0 || scene === TITLE || scene === STALE || scene === TAKE) ? "hidden" : "visible";
+    document.getElementById("app").className = scene === TITLE ? "titlemode" : (scene === TAKE ? "takemode" : "");
+    document.getElementById("take").hidden = scene !== TAKE;
+    var d = document.getElementById("dots");
+    d.innerHTML = "";
+    SEQ.forEach(function (_, i) {
+      var e = document.createElement("i");
+      if (i <= pos) e.className = "on";
+      d.appendChild(e);
+    });
+  }
+
+  function rr(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  function text(s, x, y, size, bold, color, align) {
+    ctx.font = (bold ? "bold " : "") + size + "px Arial, Helvetica, sans-serif";
+    ctx.fillStyle = color; ctx.textAlign = align || "left"; ctx.textBaseline = "alphabetic";
+    ctx.fillText(s, x, y);
+  }
+
+  function drawStale(now) {
+    var t = (now - sceneStart) / 1000, c = t % 8, base = 7 + Math.floor(t / 8);
+    var redis = c >= 1.5 ? base + 1 : base;
+    var a = c >= 3 ? base + 1 : base, b = c >= 5 ? base + 1 : base;
+    var lastA = c >= 7 ? 7 : (c >= 3 ? 3 : -1), lastB = c >= 5 ? 5 : (c >= 1 ? 1 : -3);
+    var servers = [
+      { name: "App server A", y: 30, v: a, last: lastA },
+      { name: "App server B", y: 250, v: b, last: lastB }
+    ];
+    var nx = 760, ny = 155, nw = 420, nh = 130;
+
+    servers.forEach(function (sv) {
+      ctx.strokeStyle = "rgba(84,98,116,0.35)"; ctx.lineWidth = 2; ctx.setLineDash([6, 6]);
+      ctx.beginPath(); ctx.moveTo(360, sv.y + 75); ctx.lineTo(nx, ny + nh / 2); ctx.stroke();
+      ctx.setLineDash([]);
+    });
+
+    // node
+    rr(nx, ny, nw, nh, 16); ctx.fillStyle = COL.card; ctx.fill();
+    text("Node 2", nx + 16, ny + 32, 20, true, COL.dark);
+    rr(nx + 16, ny + 46, 190, 30, 8); ctx.fillStyle = COL.indigo; ctx.fill();
+    text("post:42 = v" + redis, nx + 111, ny + 67, 16, true, COL.white, "center");
+    if (c >= 1.5 && c < 2.6) text("post edited", nx + nw - 16, ny + 32, 16, true, COL.indigo, "right");
+    text("the source of truth for this demo", nx + 16, ny + nh - 18, 12, false, COL.muted);
+
+    servers.forEach(function (sv) {
+      var stale = sv.v !== redis;
+      rr(20, sv.y, 340, 150, 16); ctx.fillStyle = COL.card; ctx.fill();
+      text(sv.name, 36, sv.y + 32, 20, true, COL.dark);
+      rr(36, sv.y + 50, 190, 36, 8); ctx.fillStyle = COL.white; ctx.fill();
+      text("post:42 = v" + sv.v, 131, sv.y + 75, 16, true, COL.dark, "center");
+      var rem = Math.max(0, Math.min(1, 1 - (c - sv.last) / 4));
+      rr(36, sv.y + 98, 190, 8, 4); ctx.fillStyle = COL.white; ctx.fill();
+      if (rem > 0.02) { rr(36, sv.y + 98, 190 * rem, 8, 4); ctx.fillStyle = COL.teal; ctx.fill(); }
+      text("app memory, refreshes when the bar runs out", 36, sv.y + 128, 12, false, COL.muted);
+      text("Readers see", 340, sv.y + 62, 12, false, COL.muted, "right");
+      text("v" + sv.v, 340, sv.y + 98, 34, true, stale ? COL.amber : COL.teal, "right");
+      text(stale ? "old" : "current", 340, sv.y + 122, 13, true, stale ? COL.amber : COL.teal, "right");
+
+      // refresh round trip
+      var d = c - sv.last;
+      if (sv.last > -2 && d >= 0 && d < 0.6) {
+        var pr = d < 0.3 ? d / 0.3 : 1 - (d - 0.3) / 0.3;
+        var x0 = 360, y0 = sv.y + 75, x1 = nx, y1 = ny + nh / 2;
+        ctx.beginPath(); ctx.arc(x0 + (x1 - x0) * pr, y0 + (y1 - y0) * pr, 7, 0, Math.PI * 2);
+        ctx.fillStyle = COL.indigo; ctx.fill();
+      }
+    });
+
+    var msg, col;
+    if (a !== b) { msg = "Two servers, two answers"; col = COL.red; }
+    else if (a !== redis) { msg = "Both servers still show the old value"; col = COL.amber; }
+    else { msg = "In sync"; col = COL.teal; }
+    text(msg, 24, LH - 14, 18, true, col);
+  }
+
+  function draw(now) {
+    ctx.clearRect(0, 0, LW, LH);
+    if (scene === TAKE) return;
+    if (scene === STALE) { drawStale(now); return; }
+
+    // lanes
+    var o = appOut();
+    for (var i = 0; i < 3; i++) {
+      var n = nodeIn(i);
+      ctx.strokeStyle = "rgba(84,98,116,0.35)"; ctx.lineWidth = 2; ctx.setLineDash([6, 6]);
+      ctx.beginPath(); ctx.moveTo(o.x, o.y); ctx.lineTo(n.x, n.y); ctx.stroke();
+    }
+    ctx.setLineDash([]);
+
+    // app box
+    rr(APP.x, APP.y, APP.w, APP.h, 16); ctx.fillStyle = COL.card; ctx.fill();
+    text("Users", APP.x + APP.w / 2, APP.y + 62, 22, true, COL.dark, "center");
+    text("and app", APP.x + APP.w / 2, APP.y + 92, 18, false, COL.muted, "center");
+
+    // nodes
+    var total = served[0] + served[1] + served[2];
+    for (var k = 0; k < 3; k++) {
+      var nd = NODES[k], l = load(k, now), over = l > 1;
+      rr(nd.x, nd.y, nd.w, nd.h, 16);
+      ctx.fillStyle = COL.card; ctx.fill();
+      if (over) { ctx.lineWidth = 3; ctx.strokeStyle = COL.red; ctx.stroke(); }
+      text("Node " + (k + 1), nd.x + 16, nd.y + 32, 20, true, COL.dark);
+      if (over) text("OVERLOADED", nd.x + nd.w - 16, nd.y + 32, 16, true, COL.red, "right");
+
+      // key chips
+      var keys = COLD[k].map(function (s) { return { s: s, kind: "cold" }; });
+      if (replicated()) keys.push({ s: VIRAL + "#" + k, kind: "hot" });
+      else if (k === 1) keys.push({ s: VIRAL, kind: "hot" });
+      keys.forEach(function (key, j) {
+        var cx = nd.x + 16 + j * 98, cy = nd.y + 46, cw = 90, ch = 26;
+        rr(cx, cy, cw, ch, 8);
+        var slow = scene === 2 && k === 1 && key.kind === "cold" && over;
+        ctx.fillStyle = key.kind === "hot" ? COL.indigo : (slow ? COL.amber : COL.white);
+        ctx.fill();
+        text(key.s, cx + cw / 2, cy + 18, 13, key.kind === "hot" || slow,
+             key.kind === "hot" || slow ? COL.white : COL.dark, "center");
+      });
+
+      // load bar
+      var bx = nd.x + 16, by = nd.y + nd.h - 40, bw = 290, bh = 16;
+      rr(bx, by, bw, bh, 8); ctx.fillStyle = COL.white; ctx.fill();
+      var fill = Math.min(1, l);
+      if (fill > 0.02) {
+        rr(bx, by, Math.max(16, bw * fill), bh, 8);
+        ctx.fillStyle = l > 1 ? COL.red : (l > 0.8 ? COL.amber : COL.teal); ctx.fill();
+      }
+      text("load", bx, by + 36 - 2, 12, false, COL.muted);
+
+      // share
+      var share = total >= 10 ? Math.round(100 * served[k] / total) + "%" : "-";
+      text(share, nd.x + nd.w - 16, nd.y + nd.h - 30, 28, true, over ? COL.red : COL.dark, "right");
+      text("of requests", nd.x + nd.w - 16, nd.y + nd.h - 12, 12, false, COL.muted, "right");
+    }
+
+    // dots
+    dots.forEach(function (d) {
+      var n2 = nodeIn(d.node), p = d.t;
+      if (d.kind === "absorb") p = d.t * ((285 - o.x) / (n2.x - o.x));
+      var dy = 0, alpha = 1;
+      if (d.kind === "over") {
+        p = Math.min(1, d.t / 0.6) * ((285 - o.x) / (n2.x - o.x));
+        if (d.t > 0.6) { var f2 = (d.t - 0.6) / 0.4; dy = f2 * 34; alpha = 1 - f2; }
+      }
+      var x = o.x + (n2.x - o.x) * p, y = o.y + (n2.y - o.y) * p + dy;
+      ctx.globalAlpha = alpha;
+      ctx.beginPath();
+      ctx.arc(x, y, d.kind === "write" ? 9 : 7, 0, Math.PI * 2);
+      ctx.fillStyle = d.color; ctx.fill();
+      if (d.kind === "write") { ctx.lineWidth = 3; ctx.strokeStyle = COL.dark; ctx.stroke(); }
+      ctx.globalAlpha = 1;
+    });
+
+    // the gate (rate limit scene)
+    if (scene === LIMIT) {
+      rr(293, 212, 10, 36, 4); ctx.fillStyle = COL.dark; ctx.fill();
+      text("limit", 298, 204, 12, true, COL.dark, "center");
+      text(LIMIT_RATE + "/s", APP.x + APP.w / 2, APP.y + APP.h + 40, 28, true, COL.dark, "center");
+      text("limit for post:42", APP.x + APP.w / 2, APP.y + APP.h + 60, 12, false, COL.muted, "center");
+      var overPct = totalReads >= 10 ? Math.round(100 * overCount / totalReads) + "%" : "-";
+      text(overPct + " of reads are over the limit", APP.x + APP.w / 2, APP.y + APP.h + 90, 14, true, COL.muted, "center");
+    }
+
+    // app memory in front of the cache (local cache scene)
+    if (scene === LOCAL) {
+      var fresh = Math.max(0, (localFresh - now) / LOCAL_TTL);
+      var glow = flashes.length ? 1 - flashes[flashes.length - 1].t : 0;
+      rr(230, 200, 140, 60, 12); ctx.fillStyle = COL.white; ctx.fill();
+      ctx.lineWidth = 2 + 3 * glow; ctx.strokeStyle = glow > 0.3 ? COL.indigo : COL.teal; ctx.stroke();
+      text("app memory", 300, 217, 11, false, COL.muted, "center");
+      text("post:42", 300, 238, 15, true, COL.dark, "center");
+      rr(244, 246, 112, 6, 3); ctx.fillStyle = COL.card; ctx.fill();
+      if (fresh > 0.02) { rr(244, 246, 112 * fresh, 6, 3); ctx.fillStyle = COL.teal; ctx.fill(); }
+      var all = absorbed + served[0] + served[1] + served[2];
+      var pct = all >= 10 ? Math.round(100 * absorbed / all) + "%" : "-";
+      text(pct, APP.x + APP.w / 2, APP.y + APP.h + 40, 28, true, COL.teal, "center");
+      text("of reads answered in app memory", APP.x + APP.w / 2, APP.y + APP.h + 60, 12, false, COL.muted, "center");
+    }
+
+    // legend
+    var ly = LH - 14;
+    function leg(x, c, label) {
+      ctx.beginPath(); ctx.arc(x, ly - 5, 6, 0, Math.PI * 2); ctx.fillStyle = c; ctx.fill();
+      text(label, x + 14, ly, 14, false, COL.muted);
+    }
+    leg(24, COL.teal, "read of a normal key");
+    leg(230, COL.indigo, "read of post:42");
+    if (scene === 2) leg(396, COL.amber, "read waiting behind it");
+    if (scene === LIMIT) leg(396, COL.muted, "read over the limit");
+    if (scene === 4) {
+      ctx.beginPath(); ctx.arc(396, ly - 5, 6, 0, Math.PI * 2); ctx.fillStyle = COL.white; ctx.fill();
+      ctx.lineWidth = 3; ctx.strokeStyle = COL.dark; ctx.stroke();
+      text("write to every copy", 410, ly, 14, false, COL.muted);
+    }
+  }
+
+  function step(dt) {
+    T += dt * 1000;
+    var now = T;
+
+    if (scene === TITLE || scene === STALE || scene === TAKE) return;
+    if (scene === LIMIT) tokens = Math.min(LIMIT_RATE, tokens + LIMIT_RATE * dt);
+    for (var q2 = flashes.length - 1; q2 >= 0; q2--) { flashes[q2].t += dt * 2.5; if (flashes[q2].t >= 1) flashes.splice(q2, 1); }
+    spawnAcc += dt * TOTAL_RATE;
+    while (spawnAcc >= 1) { spawnAcc -= 1; pickRequest(now); }
+
+    if (scene === 4) {
+      writeAcc += dt;
+      if (writeAcc >= 2.2) {
+        writeAcc = 0;
+        for (var i = 0; i < 3; i++) dots.push({ node: i, kind: "write", color: COL.white, t: 0, dur: 900 });
+      }
+    }
+
+    for (var j = dots.length - 1; j >= 0; j--) {
+      var d = dots[j];
+      d.t += (dt * 1000) / d.dur;
+      if (d.t >= 1) {
+        if (d.kind === "absorb") { absorbed++; flashes.push({ t: 0 }); }
+        else if (d.kind !== "write" && d.kind !== "over") { arrivals[d.node].push(now); served[d.node]++; }
+        dots.splice(j, 1);
+      }
+    }
+  }
+
+  function frame(real) {
+    var dt = Math.min(0.05, (real - last) / 1000); last = real;
+    step(dt);
+    draw(T);
+    requestAnimationFrame(frame);
+  }
+
+  document.getElementById("next").onclick = function () { setScene(pos + 1); };
+  document.getElementById("prev").onclick = function () { setScene(pos - 1); };
+  document.getElementById("hot").oninput = function (e) {
+    hotShare = e.target.value / 100;
+    document.getElementById("hotVal").textContent = e.target.value + "%";
+    served = [0, 0, 0]; absorbed = 0; overCount = 0; totalReads = 0;
+  };
+  window.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowRight" || e.key === " " || e.key === "Enter" || e.key === "PageDown") { e.preventDefault(); setScene(pos + 1); }
+    else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); setScene(pos - 1); }
+    else if (e.key === "r" || e.key === "R") setScene(0);
+  });
+
+  var q = parseInt(h, 10);
+  setScene(isNaN(q) ? 0 : q);
+  if (warm) { for (var w = 0; w < 500; w++) step(0.02); }  // fast-forward 10 s, for testing
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
